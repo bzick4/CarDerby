@@ -1,0 +1,5 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <ui:VisualElement style="flex-direction: row; padding: 12px; background-color: rgba(255,255,255,0.08); border-bottom-width: 1px; border-bottom-color: rgba(255,255,255,0.1);">
+        <ui:Label name="CarName" style="flex-grow: 1; font-size: 18px; padding-left: 10px;" />
+    </ui:VisualElement>
+</ui:UXML>

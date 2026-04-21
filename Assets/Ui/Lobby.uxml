@@ -1,0 +1,20 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 1; padding: 30px; background-color: rgba(10,10,30,0.85);">
+        
+        <ui:Label text="DERBY DEATHMATCH" style="font-size: 32px; unity-text-align: middle-center; margin-bottom: 30px; color: #ffcc00;" />
+        
+        <ui:Label text="Выбери автомобиль" style="font-size: 20px; unity-text-align: middle-center; margin-bottom: 15px;" />
+        
+        <ui:ListView name="CarListView" 
+                     virtualization-method="DynamicHeight" 
+                     show-border="true"
+                     style="flex-grow: 1; height: 450px; margin-bottom: 30px;" />
+        
+        <ui:VisualElement style="flex-direction: row; justify-content: center; gap: 20px;">
+            <ui:Button name="HostButton" text="НАЧАТЬ ИГРУ (HOST)" style="width: 280px; height: 70px; font-size: 20px;" />
+            <ui:Button name="JoinButton" text="ПРИСОЕДИНИТЬСЯ" style="width: 280px; height: 70px; font-size: 20px;" />
+        </ui:VisualElement>
+        
+        <ui:Label name="StatusLabel" text="Статус: Выбери автомобиль" style="margin-top: 20px; font-size: 16px; unity-text-align: middle-center;" />
+    </ui:VisualElement>
+</ui:UXML>

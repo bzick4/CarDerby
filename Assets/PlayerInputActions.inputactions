@@ -1,0 +1,35 @@
+{
+    "version": 1,
+    "name": "PlayerInputActions",
+    "maps": [
+        {
+            "name": "Vehicle",
+            "id": "89a8ff9b-7bf5-4b61-917f-9872287e9778",
+            "actions": [
+                {
+                    "name": "DriftBrake",
+                    "type": "Button",
+                    "id": "d79223f4-d379-4df8-9c86-3c21b389677b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "586e5891-347f-4b74-9df8-f0ee979f1f14",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DriftBrake",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afc1686ba41d545fabb4a75af89939fd, type: 3}
+  m_Name: Sport
+  m_EditorClassIdentifier: Assembly-CSharp::CarData
+  _guid: 072fc516-f755-4468-a5ed-18d0b25be62c
+  CarName: Sport
+  CarPrefab: {fileID: 4891897987167349224, guid: 6d50d62349cbc403bb21f64fcfdc3428, type: 3}
+  MaxSpeed: 50
+  Acceleration: 30
+  Handling: 80
+  AllowedMounts: 
