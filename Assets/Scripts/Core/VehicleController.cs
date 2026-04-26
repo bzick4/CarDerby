@@ -1,7 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.InputSystem;
-using System.Linq;   // добавь эту строку
+using System.Linq;  
 
 [RequireComponent(typeof(Rigidbody), typeof(NetworkObject))]
 public class VehicleController : NetworkBehaviour
@@ -20,8 +20,8 @@ public class VehicleController : NetworkBehaviour
     [Header("Tuning")]
     [SerializeField] private float _motorTorque = 1800f;
     [SerializeField] private float _brakeTorque = 4000f;
-    [SerializeField] private float _maxSteerAngle = 32f;
-    [SerializeField] private float _driftStiffness = 0.55f;   // 0.4 = очень сильный дрифт
+    [SerializeField] private float _maxSteerAngle = 80f;
+    [SerializeField] private float _driftStiffness = 0.35f;   // 0.4 = очень сильный дрифт
 
     private Rigidbody _rb;
     private Vector2 _moveInput;
