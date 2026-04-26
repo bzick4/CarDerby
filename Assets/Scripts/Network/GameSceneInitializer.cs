@@ -1,54 +1,69 @@
 using Unity.Netcode;
+using Unity.Collections;
 using UnityEngine;
 
-public class GameSceneInitializer : MonoBehaviour   // ← Изменили с NetworkBehaviour на MonoBehaviour
+public class GameSceneInitializer : NetworkBehaviour
 {
     [SerializeField] private CarData[] _availableCars;
 
-    private void Start()
+    public override void OnNetworkSpawn()
     {
-        // Запускаем только на локальном клиенте после загрузки сцены
-        if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsClient)
-            return;
-
-        Debug.Log("[GameSceneInitializer] Сцена загружена. Запускаем спавн локального игрока...");
-
-        SpawnLocalPlayerCar();
+        if (IsServer)
+        {
+            // Хост спавнит свою машину сразу
+            SpawnCarForClient(NetworkManager.LocalClientId, PlayerSessionData.SelectedCarGuid);
+        }
+        else
+        {
+            // Клиент просит сервер заспавнить его машину
+            RequestSpawnServerRpc(new FixedString64Bytes(PlayerSessionData.SelectedCarGuid));
+        }
     }
 
-    private void SpawnLocalPlayerCar()
+    [ServerRpc(RequireOwnership = false)]
+    private void RequestSpawnServerRpc(FixedString64Bytes carGuid, ServerRpcParams rpcParams = default)
     {
-        if (_availableCars == null || _availableCars.Length == 0)
+        SpawnCarForClient(rpcParams.Receive.SenderClientId, carGuid.ToString());
+    }
+
+    private void SpawnCarForClient(ulong clientId, string carGuid)
+    {
+        CarData car = FindCarByGuid(carGuid);
+        if (car == null)
         {
-            Debug.LogError("[GameSceneInitializer] _availableCars пустой!");
+            Debug.LogWarning($"[GameSceneInitializer] GUID '{carGuid}' не найден, берём первую машину.");
+            car = _availableCars != null && _availableCars.Length > 0 ? _availableCars[0] : null;
+        }
+
+        if (car == null || car.CarPrefab == null)
+        {
+            Debug.LogError($"[GameSceneInitializer] Нет префаба для клиента {clientId}!");
             return;
         }
 
-        // Пока берём первую машину для теста
-        CarData selectedCar = _availableCars[0];
+        var instance = Instantiate(car.CarPrefab);
+        var no = instance.GetComponent<NetworkObject>();
 
-        if (selectedCar.CarPrefab == null)
+        if (no == null)
         {
-            Debug.LogError($"[GameSceneInitializer] У машины {selectedCar.CarName} нет префаба!");
+            Debug.LogError($"[GameSceneInitializer] На префабе {car.CarName} нет NetworkObject!");
+            Destroy(instance);
             return;
         }
 
-        GameObject carInstance = Instantiate(selectedCar.CarPrefab);
-        NetworkObject networkObject = carInstance.GetComponent<NetworkObject>();
+        no.SpawnAsPlayerObject(clientId, true);
 
-        if (networkObject == null)
-        {
-            Debug.LogError($"[GameSceneInitializer] На префабе {selectedCar.CarName} нет NetworkObject!");
-            return;
-        }
+        var controller = instance.GetComponent<VehicleController>();
+        controller?.SetCarData(car);
 
-        // Спавним как Player Object
-        networkObject.SpawnAsPlayerObject(NetworkManager.Singleton.LocalClientId, true);
+        Debug.Log($"[GameSceneInitializer] Заспавнена {car.CarName} для клиента {clientId}");
+    }
 
-        VehicleController controller = carInstance.GetComponent<VehicleController>();
-        if (controller != null)
-            controller.SetCarData(selectedCar);
-
-        Debug.Log($"[GameSceneInitializer] УСПЕШНО заспавнена машина: {selectedCar.CarName} для локального игрока");
+    private CarData FindCarByGuid(string guid)
+    {
+        if (string.IsNullOrEmpty(guid) || _availableCars == null) return null;
+        foreach (var c in _availableCars)
+            if (c != null && c.Guid == guid) return c;
+        return null;
     }
 }

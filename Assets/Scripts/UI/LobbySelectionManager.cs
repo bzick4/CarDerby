@@ -114,6 +114,7 @@ public class LobbySelectionManager : MonoBehaviour
         if (e.MoveNext() && e.Current is CarData car)
         {
             _selectedCar = car;
+            PlayerSessionData.SelectedCarGuid = car.Guid;
             if (_statusLabel != null)
                 _statusLabel.text = $"Выбран: {car.CarName}";
         }

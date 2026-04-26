@@ -3,22 +3,42 @@ using UnityEngine;
 
 public class WeaponAttachmentSystem : NetworkBehaviour
 {
+    [SerializeField] private WeaponData[] _availableWeapons;
+
     private VehicleAttachmentSockets _sockets;
 
     private void Awake() => _sockets = GetComponent<VehicleAttachmentSockets>();
 
+    // Вызывается с индексом оружия из _availableWeapons
     [ServerRpc]
-    public void AttachWeaponServerRpc(NetworkObjectReference weaponPrefabRef, WeaponMountType mountType)
+    public void AttachWeaponServerRpc(int weaponIndex, WeaponMountType mountType)
     {
-        if (!weaponPrefabRef.TryGet(out NetworkObject prefabNO)) return;
+        if (_availableWeapons == null || weaponIndex < 0 || weaponIndex >= _availableWeapons.Length)
+        {
+            Debug.LogError($"[WeaponAttachmentSystem] Неверный индекс оружия: {weaponIndex}");
+            return;
+        }
 
-        Transform socket = _sockets.GetSocket(mountType);
-        if (socket == null) return;
+        WeaponData weapon = _availableWeapons[weaponIndex];
+        if (weapon?.WeaponPrefab == null)
+        {
+            Debug.LogError($"[WeaponAttachmentSystem] У оружия {weapon?.WeaponName} нет префаба!");
+            return;
+        }
 
-        // Используем наш новый пул
-        var spawnedNO = NetworkedObjectPool.Instance.GetNetworkObject(prefabNO.gameObject, socket.position, socket.rotation);
-        spawnedNO.transform.SetParent(socket, false);
+        Transform socket = _sockets?.GetSocket(mountType);
+        if (socket == null)
+        {
+            Debug.LogError($"[WeaponAttachmentSystem] Сокет {mountType} не найден!");
+            return;
+        }
 
-        spawnedNO.Spawn(true); // Spawn с destroyWithOwner
+        var no = NetworkedObjectPool.Instance.GetNetworkObject(weapon.WeaponPrefab, socket.position, socket.rotation);
+        if (no == null) return;
+
+        no.transform.SetParent(socket, false);
+
+        if (!no.IsSpawned)
+            no.Spawn(true);
     }
 }
