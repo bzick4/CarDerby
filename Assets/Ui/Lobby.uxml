@@ -1,20 +1,62 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
-    <ui:VisualElement style="flex-grow: 1; padding: 30px; background-color: rgba(10,10,30,0.85);">
-        
-        <ui:Label text="DERBY DEATHMATCH" style="font-size: 32px; unity-text-align: middle-center; margin-bottom: 30px; color: #ffcc00;" />
-        
-        <ui:Label text="Выбери автомобиль" style="font-size: 20px; unity-text-align: middle-center; margin-bottom: 15px;" />
-        
-        <ui:ListView name="CarListView" 
-                     virtualization-method="DynamicHeight" 
-                     show-border="true"
-                     style="flex-grow: 1; height: 450px; margin-bottom: 30px;" />
-        
-        <ui:VisualElement style="flex-direction: row; justify-content: center; gap: 20px;">
-            <ui:Button name="HostButton" text="НАЧАТЬ ИГРУ (HOST)" style="width: 280px; height: 70px; font-size: 20px;" />
-            <ui:Button name="JoinButton" text="ПРИСОЕДИНИТЬСЯ" style="width: 280px; height: 70px; font-size: 20px;" />
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Assets/UI/Lobby.uxml -->
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+
+    <ui:Style src="CarDerby.uss" />
+
+    <ui:VisualElement name="root" class="fullscreen" style="background-color: rgba(5,5,10,0.92); flex-direction: column;">
+
+        <!-- Header -->
+        <ui:Label name="lobby-title" text="LOBBY" class="panel-title"
+                  style="margin-top: 20px; font-size: 30px;" />
+
+        <!-- Main area: player list + settings -->
+        <ui:VisualElement class="lobby-layout">
+
+            <!-- Left: player list -->
+            <ui:VisualElement class="player-list-panel">
+                <ui:Label text="PLAYERS" class="section-label" />
+                <ui:ScrollView name="player-list" class="player-list" />
+                <ui:Label name="lobby-status" text="0 / 8  players" class="status-label" />
+            </ui:VisualElement>
+
+            <!-- Right: game settings + loadout -->
+            <ui:VisualElement class="settings-panel">
+
+                <ui:Label text="GAME MODE" class="section-label" />
+                <ui:DropdownField name="gamemode-dropdown" class="dropdown"
+                                  choices="Deathmatch,Last Man Standing" index="0" />
+
+                <ui:Label text="CAR" class="section-label" />
+                <ui:VisualElement class="row">
+                    <ui:Button text="&lt;" name="car-prev-btn"  class="arrow-btn" />
+                    <ui:Label  name="car-name-label" text="--"   class="select-label" />
+                    <ui:Button text="&gt;" name="car-next-btn"  class="arrow-btn" />
+                </ui:VisualElement>
+
+                <ui:Label text="ROOF WEAPON" class="section-label" />
+                <ui:VisualElement class="row">
+                    <ui:Button text="&lt;" name="weapon-prev-btn"  class="arrow-btn" />
+                    <ui:Label  name="weapon-name-label" text="--"   class="select-label" />
+                    <ui:Button text="&gt;" name="weapon-next-btn"  class="arrow-btn" />
+                </ui:VisualElement>
+
+                <ui:Label text="FRONT SCOOP" class="section-label" />
+                <ui:VisualElement class="row">
+                    <ui:Button text="&lt;" name="scoop-prev-btn"  class="arrow-btn" />
+                    <ui:Label  name="scoop-name-label" text="None" class="select-label" />
+                    <ui:Button text="&gt;" name="scoop-next-btn"  class="arrow-btn" />
+                </ui:VisualElement>
+
+            </ui:VisualElement>
+
         </ui:VisualElement>
-        
-        <ui:Label name="StatusLabel" text="Статус: Выбери автомобиль" style="margin-top: 20px; font-size: 16px; unity-text-align: middle-center;" />
+
+        <!-- Footer -->
+        <ui:VisualElement class="lobby-footer">
+            <ui:Button name="ready-btn" text="READY"      class="menu-btn ready-btn" />
+            <ui:Button name="start-btn" text="START GAME" class="menu-btn start-btn hidden" />
+        </ui:VisualElement>
+
     </ui:VisualElement>
 </ui:UXML>

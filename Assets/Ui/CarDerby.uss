@@ -1,0 +1,286 @@
+/* Assets/UI/CarDerby.uss */
+
+/* ── Utilities ─────────────────────────────────────────────────────────── */
+
+.fullscreen {
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
+    width: 100%; height: 100%;
+}
+
+.hidden { display: none; }
+
+.row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── Shared panel chrome ─────────────────────────────────────────────────── */
+
+.center-panel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -200px -50%;
+    width: 400px;
+    padding: 40px 32px;
+    background-color: rgba(8, 8, 16, 0.88);
+    border-radius: 12px;
+    border-color: rgba(200, 50, 50, 0.6);
+    border-width: 1px;
+    align-items: stretch;
+}
+
+.title-label {
+    font-size: 52px;
+    color: rgb(255, 200, 0);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    margin-bottom: 36px;
+    letter-spacing: 4px;
+}
+
+.panel-title {
+    font-size: 22px;
+    color: rgb(200, 200, 200);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    margin-bottom: 20px;
+}
+
+.section-label {
+    font-size: 12px;
+    color: rgb(150, 150, 150);
+    -unity-font-style: bold;
+    letter-spacing: 2px;
+    margin-top: 14px;
+    margin-bottom: 4px;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+
+.menu-btn {
+    height: 48px;
+    margin: 5px 0;
+    font-size: 15px;
+    -unity-font-style: bold;
+    color: white;
+    background-color: rgb(190, 40, 40);
+    border-radius: 6px;
+    border-width: 0;
+    letter-spacing: 1px;
+    transition-property: background-color;
+    transition-duration: 0.1s;
+}
+
+.menu-btn:hover  { background-color: rgb(220, 60, 60); }
+.menu-btn:active { background-color: rgb(160, 20, 20); }
+
+.menu-btn.secondary {
+    background-color: rgba(80, 80, 80, 0.9);
+}
+.menu-btn.secondary:hover { background-color: rgba(110, 110, 110, 0.9); }
+
+.ready-btn          { background-color: rgb(40, 160, 40); }
+.ready-btn:hover    { background-color: rgb(55, 190, 55); }
+.ready-btn.is-ready { background-color: rgb(100, 100, 100); }
+
+.start-btn          { background-color: rgb(200, 150, 0); }
+.start-btn:hover    { background-color: rgb(230, 180, 0); }
+.start-btn:disabled { opacity: 0.4; }
+
+.arrow-btn {
+    width: 36px; height: 36px;
+    font-size: 18px;
+    background-color: rgba(80, 80, 80, 0.8);
+    border-radius: 4px;
+    border-width: 0;
+    color: white;
+}
+
+/* ── Inputs ──────────────────────────────────────────────────────────────── */
+
+.input-field {
+    margin: 5px 0;
+    height: 38px;
+    font-size: 14px;
+    color: white;
+    background-color: rgba(40, 40, 40, 0.9);
+    border-color: rgba(120, 120, 120, 0.5);
+    border-radius: 4px;
+}
+
+.dropdown {
+    margin: 5px 0;
+    height: 38px;
+    font-size: 14px;
+    background-color: rgba(40, 40, 40, 0.9);
+}
+
+.select-label {
+    flex-grow: 1;
+    -unity-text-align: middle-center;
+    color: white;
+    font-size: 15px;
+}
+
+/* ── Server browser ──────────────────────────────────────────────────────── */
+
+.browser-panel {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    translate: -350px 0;
+    width: 700px;
+    height: 80%;
+    background-color: rgba(8, 8, 16, 0.88);
+    border-radius: 12px;
+    border-color: rgba(200, 50, 50, 0.6);
+    border-width: 1px;
+    padding: 24px;
+}
+
+.server-list { flex-grow: 1; margin: 8px 0; }
+
+.server-row {
+    flex-direction: row;
+    align-items: center;
+    padding: 8px 12px;
+    margin: 3px 0;
+    background-color: rgba(40, 40, 40, 0.8);
+    border-radius: 4px;
+}
+
+.server-row:hover { background-color: rgba(60, 60, 60, 0.9); }
+
+.server-row-name   { flex-grow: 1; color: white; font-size: 14px; }
+.server-row-info   { color: rgb(160, 160, 160); font-size: 13px; margin-right: 12px; }
+.server-row-join   { width: 80px; height: 32px; font-size: 13px; }
+
+/* ── Lobby ───────────────────────────────────────────────────────────────── */
+
+.lobby-layout {
+    flex-direction: row;
+    flex-grow: 1;
+    margin: 12px 24px;
+}
+
+.player-list-panel {
+    flex: 1;
+    background-color: rgba(20, 20, 30, 0.7);
+    border-radius: 8px;
+    padding: 16px;
+    margin-right: 12px;
+}
+
+.settings-panel {
+    width: 280px;
+    background-color: rgba(20, 20, 30, 0.7);
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.player-list { flex-grow: 1; }
+
+.player-row {
+    flex-direction: row;
+    align-items: center;
+    padding: 8px;
+    margin: 3px 0;
+    background-color: rgba(40, 40, 40, 0.6);
+    border-radius: 4px;
+}
+
+.player-row-name   { flex-grow: 1; color: white; font-size: 14px; }
+.player-row-status          { font-size: 13px; color: rgb(160, 160, 160); }
+.player-row-status.is-ready  { color: rgb(100, 200, 100); }
+.player-row-status.not-ready { color: rgb(200, 100, 100); }
+
+.lobby-footer {
+    flex-direction: row;
+    justify-content: flex-end;
+    padding: 12px 24px;
+    margin-top: auto;
+}
+.lobby-footer .menu-btn { width: 160px; margin-left: 12px; }
+
+.status-label {
+    color: rgb(160, 160, 160);
+    font-size: 13px;
+    margin-top: 6px;
+    -unity-text-align: middle-center;
+}
+
+/* ── HUD ─────────────────────────────────────────────────────────────────── */
+
+.hud-root {
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
+}
+
+.health-container {
+    position: absolute;
+    bottom: 28px;
+    left: 24px;
+    flex-direction: row;
+    align-items: center;
+}
+
+.hud-label {
+    color: rgb(200, 200, 200);
+    font-size: 13px;
+    -unity-font-style: bold;
+    margin-right: 8px;
+    letter-spacing: 1px;
+}
+
+.bar-bg {
+    width: 240px;
+    height: 20px;
+    background-color: rgba(0, 0, 0, 0.65);
+    border-radius: 5px;
+    overflow: hidden;
+    border-color: rgba(255,255,255,0.15);
+    border-width: 1px;
+}
+
+.bar-fill {
+    height: 100%;
+    width: 100%;
+    background-color: rgb(50, 200, 70);
+    transition-property: width, background-color;
+    transition-duration: 0.18s;
+}
+
+.hud-value {
+    color: white;
+    font-size: 14px;
+    -unity-font-style: bold;
+    margin-left: 8px;
+}
+
+/* world-space enemy bar overlay — covers full screen, pointer events off */
+.ws-overlay {
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
+    width: 100%; height: 100%;
+}
+
+/* each injected enemy bar */
+.ws-bar {
+    position: absolute;
+    width: 72px;
+    height: 8px;
+    background-color: rgba(0, 0, 0, 0.55);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.ws-bar-fill {
+    height: 100%;
+    width: 100%;
+    background-color: rgb(50, 200, 70);
+    transition-property: width, background-color;
+    transition-duration: 0.15s;
+}

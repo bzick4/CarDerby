@@ -165,6 +165,52 @@ WheelCollider:
   m_LayerOverridePriority: 0
   m_Enabled: 1
   m_ProvidesContacts: 0
+--- !u!1 &1943716374805282299
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4102812781912284686}
+  - component: {fileID: 2073208945604640203}
+  m_Layer: 0
+  m_Name: WorldSpaceHP
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4102812781912284686
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943716374805282299}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6952962257714768987}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2073208945604640203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943716374805282299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b039c6e6dac29459e943eaed51705ffa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CarDerby.UI.WorldSpaceHealthBar
+  _visibilityRange: 20
+  _worldOffset: {x: 0, y: 2.4, z: 0}
 --- !u!1 &2486056353831558059
 GameObject:
   m_ObjectHideFlags: 0
@@ -174,6 +220,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2084413195363887896}
+  - component: {fileID: 4295467638615213470}
+  - component: {fileID: 7709432870715604517}
   m_Layer: 0
   m_Name: WeaponPoint
   m_TagString: Untagged
@@ -190,12 +238,55 @@ Transform:
   m_GameObject: {fileID: 2486056353831558059}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0, z: -0, w: 1}
-  m_LocalPosition: {x: -6.5, y: 1.81, z: -1.69}
+  m_LocalPosition: {x: 0, y: 1.45, z: -0.41}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6952962257714768987}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4295467638615213470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2486056353831558059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 0
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!114 &7709432870715604517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2486056353831558059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c30ff3b6e407648c7886e023a7354fd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Combat.MachineGun
+  ShowTopMostFoldoutHeaderGroup: 1
+  _weaponData: {fileID: 11400000, guid: 82a2e7a19462a4aac86e68c5d32f50a7, type: 2}
+  _weaponMount: {fileID: 2084413195363887896}
+  _muzzlePoint: {fileID: 2084413195363887896}
+  _muzzleFlash: {fileID: 0}
+  _fireAudio: {fileID: 0}
 --- !u!1 &4347436342129748844
 GameObject:
   m_ObjectHideFlags: 0
@@ -326,6 +417,134 @@ WheelCollider:
   m_LayerOverridePriority: 0
   m_Enabled: 1
   m_ProvidesContacts: 0
+--- !u!1 &4966396759444465196
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3080225728091486236}
+  - component: {fileID: 4644478774117380169}
+  - component: {fileID: 4980225969959065440}
+  m_Layer: 0
+  m_Name: CameraRig
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3080225728091486236
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4966396759444465196}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.084644586, y: -0, z: -0, w: 0.9964112}
+  m_LocalPosition: {x: 0, y: 3.25, z: -3.57}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6952962257714768987}
+  m_LocalEulerAnglesHint: {x: 9.711, y: 0, z: 0}
+--- !u!20 &4644478774117380169
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4966396759444465196}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_Iso: 200
+  m_ShutterSpeed: 0.005
+  m_Aperture: 16
+  m_FocusDistance: 10
+  m_FocalLength: 50
+  m_BladeCount: 5
+  m_Curvature: {x: 2, y: 11}
+  m_BarrelClipping: 0.25
+  m_Anamorphism: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+--- !u!114 &4980225969959065440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4966396759444465196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalCameraData
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_TaaSettings:
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
+  m_Version: 2
 --- !u!1 &5692620443660903527
 GameObject:
   m_ObjectHideFlags: 0
@@ -595,6 +814,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2506474107028077369}
+  - component: {fileID: 2446241937961077185}
   m_Layer: 0
   m_Name: GrabPoint
   m_TagString: Untagged
@@ -617,6 +837,67 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6952962257714768987}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2446241937961077185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6044946999123447118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc5fbc65bb7ae41a48a16838e7d71efe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Car.ScoopModifier
+  _weaponData: {fileID: 11400000, guid: 1246e2e68ce6048a086d8a7c647689c1, type: 2}
+--- !u!1 &8316820723764299836
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8336724583192345120}
+  - component: {fileID: 212618563108889342}
+  m_Layer: 0
+  m_Name: Nitro
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8336724583192345120
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8316820723764299836}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -1.58}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6952962257714768987}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &212618563108889342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8316820723764299836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: defc6a88dfbc644e5bcb4adf35b75f73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Car.NitroSystem
+  _multiplier: 1.8
+  _duration: 2
+  _cooldown: 5
+  _exhaustParticles: {fileID: 0}
 --- !u!1 &8672942426941980960
 GameObject:
   m_ObjectHideFlags: 0
@@ -628,12 +909,17 @@ GameObject:
   - component: {fileID: 6952962257714768987}
   - component: {fileID: 6365822741058366373}
   - component: {fileID: 2342728629267468473}
+  - component: {fileID: -467736554044491028}
   - component: {fileID: 2044471570583316710}
   - component: {fileID: -3707506355375173332}
-  - component: {fileID: -1009056542019945817}
-  - component: {fileID: 4964158388335171354}
-  - component: {fileID: -2659952560953113953}
-  - component: {fileID: -467736554044491028}
+  - component: {fileID: 8175403808363024097}
+  - component: {fileID: 4044154911857877769}
+  - component: {fileID: 9124414942350236600}
+  - component: {fileID: 5373872799803755377}
+  - component: {fileID: 3975775196171007731}
+  - component: {fileID: 3550270991635978939}
+  - component: {fileID: 4037177265153440750}
+  - component: {fileID: 776873993639547830}
   m_Layer: 0
   m_Name: Classic Car_9
   m_TagString: Untagged
@@ -657,6 +943,9 @@ Transform:
   - {fileID: 8608455357832848685}
   - {fileID: 2084413195363887896}
   - {fileID: 2506474107028077369}
+  - {fileID: 8336724583192345120}
+  - {fileID: 4102812781912284686}
+  - {fileID: 3080225728091486236}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6365822741058366373
@@ -717,6 +1006,28 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &-467736554044491028
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8672942426941980960}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 3081714833675318670, guid: b41f325afd28943af911273934da2ea2, type: 3}
 --- !u!54 &2044471570583316710
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -769,7 +1080,7 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!114 &-1009056542019945817
+--- !u!114 &8175403808363024097
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -778,24 +1089,44 @@ MonoBehaviour:
   m_GameObject: {fileID: 8672942426941980960}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7227e84f134a24baaaf29443acb302b0, type: 3}
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::VehicleController
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkTransform
   ShowTopMostFoldoutHeaderGroup: 1
-  _moveAction: {fileID: -6001334295539670069, guid: 54629381c017b4cb0b06968f43d1a357, type: 3}
-  _driftBrakeAction: {fileID: 6638343866256454622, guid: 54629381c017b4cb0b06968f43d1a357, type: 3}
-  _frontWheels:
-  - {fileID: 4266762106101799781}
-  - {fileID: 2176046970301967999}
-  _rearWheels:
-  - {fileID: 744088378695001120}
-  - {fileID: 6730365121130956873}
-  _carData: {fileID: 11400000, guid: 04aa6346d7b5545c6a6aeb9d89b3918b, type: 2}
-  _motorTorque: 1800
-  _brakeTorque: 4000
-  _maxSteerAngle: 32
-  _driftStiffness: 0.55
---- !u!114 &4964158388335171354
+  NetworkTransformExpanded: 0
+  AutoOwnerAuthorityTickOffset: 1
+  PositionInterpolationType: 0
+  RotationInterpolationType: 0
+  ScaleInterpolationType: 0
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
+  RotationLerpSmoothing: 1
+  RotationMaxInterpolationTime: 0.1
+  ScaleLerpSmoothing: 1
+  ScaleMaxInterpolationTime: 0.1
+  AuthorityMode: 0
+  TickSyncChildren: 0
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  SwitchTransformSpaceWhenParented: 0
+  Interpolate: 1
+  SlerpPosition: 0
+--- !u!114 &4044154911857877769
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -804,11 +1135,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 8672942426941980960}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97c20475bf0d14085b601414d9bbac46, type: 3}
+  m_Script: {fileID: 11500000, guid: e0714f390737c4dfd927e21764c7e8ea, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HealthComponent
-  ShowTopMostFoldoutHeaderGroup: 1
---- !u!114 &-2659952560953113953
+  m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Car.CarPhysics
+  _settings:
+    AccelerationForce: 3000
+    SteeringTorque: 1400
+    LateralDampening: 60
+    BrakeStrength: 4
+    SteeringSpeedThreshold: 4
+--- !u!114 &9124414942350236600
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -817,31 +1153,91 @@ MonoBehaviour:
   m_GameObject: {fileID: 8672942426941980960}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e8cb7f065af3427baafdc7001a4582b, type: 3}
+  m_Script: {fileID: 11500000, guid: 57adf177268a74aa98ec20c57367b79c, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::VehicleAttachmentSockets
+  m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Car.CarController
   ShowTopMostFoldoutHeaderGroup: 1
-  _roofGunSocket: {fileID: 2084413195363887896}
-  _scoopSocket: {fileID: 2506474107028077369}
---- !u!64 &-467736554044491028
-MeshCollider:
+  _physics: {fileID: 4044154911857877769}
+  _nitro: {fileID: 212618563108889342}
+  _drift: {fileID: 5373872799803755377}
+  _scoop: {fileID: 2446241937961077185}
+  _baseMaxSpeed: 25
+--- !u!114 &5373872799803755377
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8672942426941980960}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 3081714833675318670, guid: b41f325afd28943af911273934da2ea2, type: 3}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99c271b39d3be48f2b2b172d51714f94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Car.DriftSystem
+  _yawTorque: 900
+  _gripMultiplier: 0.18
+  _tireTrails: []
+--- !u!114 &3975775196171007731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8672942426941980960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe3aa1dda2b0f4e2fb15319c1c97e4db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Player.PlayerNetwork
+  ShowTopMostFoldoutHeaderGroup: 1
+  _carController: {fileID: 9124414942350236600}
+  _weaponController: {fileID: 7709432870715604517}
+  _healthSystem: {fileID: 4037177265153440750}
+  _inputHandler: {fileID: 776873993639547830}
+  _cameraRig: {fileID: 8672942426941980960}
+  _worldSpaceHealthBar: {fileID: 2073208945604640203}
+--- !u!114 &3550270991635978939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8672942426941980960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30823002e3fe24ff3a575afd410bdf3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Health.VisualFeedbackController
+  _healthSystem: {fileID: 4037177265153440750}
+  _smokeParticles: {fileID: 0}
+  _fireParticles: {fileID: 0}
+  _deathExplosionPrefab: {fileID: 0}
+--- !u!114 &4037177265153440750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8672942426941980960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ba0f2aadcfe1439e991d16e3d73007b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Health.HealthSystem
+  ShowTopMostFoldoutHeaderGroup: 1
+  _maxHealth: 100
+--- !u!114 &776873993639547830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8672942426941980960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 882dd1f4499df4e44bc4dd0779c20e06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Player.PlayerInputHandler
+  _carController: {fileID: 9124414942350236600}
+  _weaponController: {fileID: 7709432870715604517}
+  _playerCamera: {fileID: 4644478774117380169}

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Assets/UI/MainMenu.uxml -->
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+
+    <ui:Style src="CarDerby.uss" />
+
+    <ui:VisualElement name="root" class="fullscreen">
+
+        <!-- ── MAIN PANEL ─────────────────────────────────────────── -->
+        <ui:VisualElement name="main-panel" class="center-panel">
+            <ui:Label text="CAR DERBY" name="title" class="title-label" />
+            <ui:Button text="HOST GAME"      name="host-btn"   class="menu-btn" />
+            <ui:Button text="JOIN BY IP"     name="join-btn"   class="menu-btn" />
+            <ui:Button text="BROWSE SERVERS" name="browse-btn" class="menu-btn" />
+            <ui:Button text="QUIT"           name="quit-btn"   class="menu-btn secondary" />
+        </ui:VisualElement>
+
+        <!-- ── HOST PANEL ─────────────────────────────────────────── -->
+        <ui:VisualElement name="host-panel" class="center-panel hidden">
+            <ui:Label text="HOST GAME" class="panel-title" />
+            <ui:TextField label="Server name" name="host-name"     class="input-field" value="My Derby" />
+            <ui:TextField label="Port"        name="host-port"     class="input-field" value="7777" />
+            <ui:TextField label="Password"    name="host-password" class="input-field" password="true" />
+            <ui:Button text="START HOST" name="confirm-host-btn" class="menu-btn" />
+            <ui:Button text="BACK"       name="host-back-btn"   class="menu-btn secondary" />
+        </ui:VisualElement>
+
+        <!-- ── JOIN PANEL ─────────────────────────────────────────── -->
+        <ui:VisualElement name="join-panel" class="center-panel hidden">
+            <ui:Label text="JOIN GAME" class="panel-title" />
+            <ui:TextField label="IP Address" name="join-ip"       class="input-field" value="127.0.0.1" />
+            <ui:TextField label="Port"       name="join-port"     class="input-field" value="7777" />
+            <ui:TextField label="Password"   name="join-password" class="input-field" password="true" />
+            <ui:Button text="CONNECT" name="confirm-join-btn" class="menu-btn" />
+            <ui:Button text="BACK"    name="join-back-btn"   class="menu-btn secondary" />
+        </ui:VisualElement>
+
+        <!-- ── SERVER BROWSER PANEL ───────────────────────────────── -->
+        <ui:VisualElement name="browser-panel" class="browser-panel hidden">
+            <ui:Label text="SERVERS" class="panel-title" />
+            <ui:ScrollView name="server-list" class="server-list" />
+            <ui:VisualElement class="row" style="margin-top: 12px;">
+                <ui:Button text="REFRESH" name="refresh-btn"      class="menu-btn" style="width: 140px; margin-right: 8px;" />
+                <ui:Button text="BACK"    name="browser-back-btn" class="menu-btn secondary" style="width: 140px;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+    </ui:VisualElement>
+</ui:UXML>

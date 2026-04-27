@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Assets/UI/HUD.uxml -->
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+
+    <ui:Style src="CarDerby.uss" />
+
+    <!-- picking-mode=Ignore so the HUD doesn't eat mouse clicks -->
+    <ui:VisualElement name="hud-root" class="hud-root" picking-mode="Ignore">
+
+        <!-- Local player HP bar — bottom-left -->
+        <ui:VisualElement name="health-container" class="health-container" picking-mode="Ignore">
+            <ui:Label text="HP" class="hud-label" />
+            <ui:VisualElement name="health-bar-bg" class="bar-bg">
+                <ui:VisualElement name="health-bar-fill" class="bar-fill" />
+            </ui:VisualElement>
+            <ui:Label name="health-value" text="100" class="hud-value" />
+        </ui:VisualElement>
+
+        <!-- Enemy world-space HP bars are injected here at runtime by WorldSpaceHealthBar.cs -->
+        <ui:VisualElement name="ws-overlay" class="ws-overlay" picking-mode="Ignore" />
+
+    </ui:VisualElement>
+</ui:UXML>
