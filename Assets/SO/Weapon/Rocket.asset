@@ -15,7 +15,7 @@ MonoBehaviour:
   WeaponName: Rocket
   Icon: {fileID: 0}
   Description: 
-  WeaponPrefab: {fileID: 100000, guid: 2df433980a1fcb241915264cadcafe4d, type: 3}
+  WeaponPrefab: {fileID: 5662795539983686343, guid: beed9273e6d52498a8cef37ad77a6bbc, type: 3}
   IsFrontScoop: 0
   Damage: 30
   FireRate: 8

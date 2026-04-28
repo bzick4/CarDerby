@@ -1,61 +1,73 @@
 // Assets/Scripts/UI/LobbyUI.cs
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 using Unity.Netcode;
-using System.Collections.Generic;
 
 namespace CarDerby.UI
 {
-    /// <summary>
-    /// Drives Lobby.uxml.
-    /// Subscribes to LobbyManager.OnLobbyChanged for list refresh.
-    /// Car/weapon cycling calls CarSelectionSystem and WeaponSelectionSystem locally,
-    /// then pushes the choice to the server via SetLoadoutServerRpc on ready.
-    /// </summary>
     [RequireComponent(typeof(UIDocument))]
     public class LobbyUI : MonoBehaviour
     {
         [SerializeField] private Networking.LobbyManager            _lobby;
         [SerializeField] private Customization.CarSelectionSystem    _cars;
         [SerializeField] private Customization.WeaponSelectionSystem _weapons;
+        [SerializeField] private string _gameSceneName = "GameScene";
 
         private UIDocument _doc;
         private bool       _isReady;
+        private bool       _bound;                    // защита от двойной подписки
+        private float      _readyCooldownUntil = -1f; // time-based гард от двойного срабатывания
+
+        // Храним лямбды чтобы корректно отписаться
+        private System.Action _onCarPrev, _onCarNext;
+        private System.Action _onWeaponPrev, _onWeaponNext;
+        private System.Action _onScoopPrev, _onScoopNext;
+
+        // ── Lifecycle ────────────────────────────────────────────────────────
 
         private void OnEnable()
         {
+            if (_bound) return;          // UIDocument иногда вызывает OnEnable дважды
+            _bound = true;
+
             _doc = GetComponent<UIDocument>();
             var root = _doc.rootVisualElement;
 
-            // Lobby events
-            _lobby.OnLobbyChanged += RefreshPlayerList;
-
             // Car selection
-            root.Q<Button>("car-prev-btn").clicked += () => { _cars.SelectPrev(); UpdateCarLabel(); };
-            root.Q<Button>("car-next-btn").clicked += () => { _cars.SelectNext(); UpdateCarLabel(); };
+            _onCarPrev = () => { _cars.SelectPrev(); UpdateCarLabel(); };
+            _onCarNext = () => { _cars.SelectNext(); UpdateCarLabel(); };
+            root.Q<Button>("car-prev-btn").clicked += _onCarPrev;
+            root.Q<Button>("car-next-btn").clicked += _onCarNext;
 
             // Weapon selection
-            root.Q<Button>("weapon-prev-btn").clicked += () => { CycleWeapon(-1); UpdateWeaponLabel(); };
-            root.Q<Button>("weapon-next-btn").clicked += () => { CycleWeapon(+1); UpdateWeaponLabel(); };
+            _onWeaponPrev = () => { CycleWeapon(-1); UpdateWeaponLabel(); };
+            _onWeaponNext = () => { CycleWeapon(+1); UpdateWeaponLabel(); };
+            root.Q<Button>("weapon-prev-btn").clicked += _onWeaponPrev;
+            root.Q<Button>("weapon-next-btn").clicked += _onWeaponNext;
 
             // Scoop selection
-            root.Q<Button>("scoop-prev-btn").clicked += () => { CycleScoop(-1); UpdateScoopLabel(); };
-            root.Q<Button>("scoop-next-btn").clicked += () => { CycleScoop(+1); UpdateScoopLabel(); };
+            _onScoopPrev = () => { CycleScoop(-1); UpdateScoopLabel(); };
+            _onScoopNext = () => { CycleScoop(+1); UpdateScoopLabel(); };
+            root.Q<Button>("scoop-prev-btn").clicked += _onScoopPrev;
+            root.Q<Button>("scoop-next-btn").clicked += _onScoopNext;
 
-            // Game mode
+            // Game mode (host only)
             root.Q<DropdownField>("gamemode-dropdown").RegisterValueChangedCallback(e =>
             {
                 if (NetworkManager.Singleton.IsHost)
                     _lobby.SetGameModeServerRpc(e.newValue);
             });
 
-            // Ready / Start
             root.Q<Button>("ready-btn").clicked += ToggleReady;
             root.Q<Button>("start-btn").clicked += OnStartClicked;
 
-            // Host only: show Start button
             bool isHost = NetworkManager.Singleton.IsHost;
             root.Q<Button>("start-btn").style.display = isHost ? DisplayStyle.Flex : DisplayStyle.None;
+
+            // Подписываемся напрямую на NetworkList — самый надёжный путь
+            _lobby.Players.OnListChanged += OnPlayersListChanged;
 
             RefreshPlayerList();
             UpdateCarLabel();
@@ -63,9 +75,51 @@ namespace CarDerby.UI
             UpdateScoopLabel();
         }
 
+        private void Update()
+        {
+            if (_doc == null || NetworkManager.Singleton == null) return;
+
+            bool isHost = NetworkManager.Singleton.IsHost;
+            var root     = _doc.rootVisualElement;
+            var startBtn = root.Q<Button>("start-btn");
+            if (startBtn == null) return;
+
+            // Видимость — только для хоста
+            startBtn.style.display = isHost ? DisplayStyle.Flex : DisplayStyle.None;
+
+            // Доступность — когда все готовы (читаем свежее состояние каждый кадр)
+            if (isHost)
+            {
+                startBtn.SetEnabled(_lobby != null && _lobby.AllPlayersReady());
+            }
+        }
+
         private void OnDisable()
         {
-            _lobby.OnLobbyChanged -= RefreshPlayerList;
+            if (!_bound) return;
+            _bound = false;
+
+            _lobby.Players.OnListChanged -= OnPlayersListChanged;
+
+            // Отписываем кнопки — без этого при повторном OnEnable накапливались дубли
+            var root = _doc?.rootVisualElement;
+            if (root == null) return;
+
+            root.Q<Button>("car-prev-btn").clicked    -= _onCarPrev;
+            root.Q<Button>("car-next-btn").clicked    -= _onCarNext;
+            root.Q<Button>("weapon-prev-btn").clicked -= _onWeaponPrev;
+            root.Q<Button>("weapon-next-btn").clicked -= _onWeaponNext;
+            root.Q<Button>("scoop-prev-btn").clicked  -= _onScoopPrev;
+            root.Q<Button>("scoop-next-btn").clicked  -= _onScoopNext;
+            root.Q<Button>("ready-btn").clicked       -= ToggleReady;
+            root.Q<Button>("start-btn").clicked       -= OnStartClicked;
+        }
+
+        // ── NetworkList callback ─────────────────────────────────────────────
+
+        private void OnPlayersListChanged(NetworkListEvent<Networking.LobbyPlayerData> _)
+        {
+            RefreshPlayerList();
         }
 
         // ── Player list ──────────────────────────────────────────────────────
@@ -77,9 +131,15 @@ namespace CarDerby.UI
             listView.Clear();
 
             int count = _lobby.PlayerCount;
+
             for (int i = 0; i < count; i++)
             {
                 var data = _lobby.GetPlayer(i);
+
+                // Для локального игрока используем локальный _isReady как источник правды —
+                // это убирает задержку ожидания сетевого round-trip
+                bool isLocal = data.ClientId == NetworkManager.Singleton.LocalClientId;
+                bool ready   = isLocal ? _isReady : data.IsReady;
 
                 var row = new VisualElement();
                 row.AddToClassList("player-row");
@@ -87,7 +147,6 @@ namespace CarDerby.UI
                 var nameLabel = new Label(data.DisplayName.ToString());
                 nameLabel.AddToClassList("player-row-name");
 
-                bool ready = data.IsReady;
                 var statusLabel = new Label(ready ? "Ready" : "Not Ready");
                 statusLabel.AddToClassList("player-row-status");
                 statusLabel.AddToClassList(ready ? "is-ready" : "not-ready");
@@ -98,10 +157,7 @@ namespace CarDerby.UI
             }
 
             root.Q<Label>("lobby-status").text = $"{count} / {_lobby.MaxPlayers}  players";
-
-            // Обновляем кнопку Start (только для хоста)
-            if (NetworkManager.Singleton.IsHost)
-                root.Q<Button>("start-btn").SetEnabled(_lobby.AllPlayersReady());
+            // Кнопка Start обновляется в Update() — там нет race condition с RPC
         }
 
         // ── Loadout cycling ──────────────────────────────────────────────────
@@ -112,8 +168,7 @@ namespace CarDerby.UI
 
         private void CycleWeapon(int dir)
         {
-            if (dir > 0) _weapons.SelectWeaponNext();
-            else         _weapons.SelectWeaponPrev();
+            if (dir > 0) _weapons.SelectWeaponNext(); else _weapons.SelectWeaponPrev();
         }
         private void UpdateWeaponLabel() =>
             _doc.rootVisualElement.Q<Label>("weapon-name-label").text =
@@ -121,23 +176,21 @@ namespace CarDerby.UI
 
         private void CycleScoop(int dir)
         {
-            if (dir > 0) _weapons.SelectScoopNext();
-            else         _weapons.SelectScoopPrev();
+            if (dir > 0) _weapons.SelectScoopNext(); else _weapons.SelectScoopPrev();
         }
         private void UpdateScoopLabel() =>
             _doc.rootVisualElement.Q<Label>("scoop-name-label").text =
                 _weapons.SelectedScoop?.WeaponName ?? "None";
 
-        // ── Ready / Start ────────────────────────────────────────────────────
+        // ── Ready ────────────────────────────────────────────────────────────
 
         private void ToggleReady()
         {
-            // LobbyManager спавнится NGO чуть позже загрузки сцены — защита от гонки.
-            if (!_lobby.IsSpawned)
-            {
-                Debug.LogWarning("[LobbyUI] LobbyManager ещё не заспавнен, попробуй ещё раз.");
-                return;
-            }
+            // Кулдаун 500 мс — блокирует повторные вызовы между фреймами
+            if (Time.unscaledTime < _readyCooldownUntil) return;
+            _readyCooldownUntil = Time.unscaledTime + 0.5f;
+
+            if (!_lobby.IsSpawned) return;
 
             _isReady = !_isReady;
 
@@ -147,24 +200,45 @@ namespace CarDerby.UI
                 IndexOf(_weapons.RoofWeapons, _weapons.SelectedWeapon),
                 IndexOf(_weapons.Scoops,      _weapons.SelectedScoop));
 
+            // Обновляем UI немедленно не дожидаясь сетевого ответа
+            RefreshPlayerList();
+
             var btn = _doc.rootVisualElement.Q<Button>("ready-btn");
             btn.text = _isReady ? "CANCEL" : "READY";
             if (_isReady) btn.AddToClassList("is-ready");
             else          btn.RemoveFromClassList("is-ready");
         }
 
+        // ── Start ────────────────────────────────────────────────────────────
+
+        private void OnStartClicked()
+        {
+            if (!NetworkManager.Singleton.IsHost) return;
+
+            // Сохраняем выбор каждого игрока в статический контейнер
+            // (переживает смену сцены, не нужен DontDestroyOnLoad)
+            Gameplay.MatchData.Clear();
+            for (int i = 0; i < _lobby.PlayerCount; i++)
+            {
+                var p = _lobby.GetPlayer(i);
+                Gameplay.MatchData.SetPlayerLoadout(p.ClientId, p.CarIndex, p.WeaponIndex, p.ScoopIndex);
+            }
+
+            // Загружаем через NGO SceneManager — все клиенты переедут автоматически
+            var status = NetworkManager.Singleton.SceneManager.LoadScene(
+                _gameSceneName, LoadSceneMode.Single);
+
+            if (status != SceneEventProgressStatus.Started)
+                Debug.LogError($"[LobbyUI] Не удалось загрузить {_gameSceneName}: {status}");
+        }
+
+        // ── Helpers ──────────────────────────────────────────────────────────
+
         private static int IndexOf<T>(IReadOnlyList<T> list, T item) where T : class
         {
             for (int i = 0; i < list.Count; i++)
                 if (list[i] == item) return i;
             return -1;
-        }
-
-        private void OnStartClicked()
-        {
-            Debug.Log("[LobbyUI] Host starting match.");
-            // Load game scene — wire to a MatchController or directly:
-            // NetworkManager.Singleton.SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
         }
     }
 }

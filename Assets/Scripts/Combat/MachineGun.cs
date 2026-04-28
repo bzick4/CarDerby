@@ -5,8 +5,8 @@ using Unity.Netcode;
 namespace CarDerby.Combat
 {
     /// <summary>
-    /// Rapid-fire weapon. All stats (damage, fire rate, projectile prefab)
-    /// come from the WeaponDataSO assigned in the Inspector — nothing is hardcoded here.
+    /// Rapid-fire weapon. Все характеристики из WeaponDataSO.
+    /// SpawnProjectile вызывается только у владельца, но спавнит через сервер.
     /// </summary>
     public class MachineGun : WeaponController
     {
@@ -15,23 +15,32 @@ namespace CarDerby.Combat
 
         protected override void SpawnProjectile()
         {
-            if (_weaponData == null || _weaponData.ProjectilePrefab == null)
+            // Только сервер/хост может спавнить NetworkObject
+            if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsServer) return;
+
+            if (_weaponData == null || _weaponData.ProjectilePrefab == null) return;
+
+            if (_muzzlePoint == null)
             {
-                Debug.LogError("[MachineGun] WeaponDataSO or ProjectilePrefab is not assigned.");
+                Debug.LogError("[MachineGun] MuzzlePoint не назначен.");
                 return;
             }
 
-            var obj = Instantiate(
-                _weaponData.ProjectilePrefab,
-                _muzzlePoint.position,
-                _muzzlePoint.rotation);
-
+            var obj    = Instantiate(_weaponData.ProjectilePrefab, _muzzlePoint.position, _muzzlePoint.rotation);
             var netObj = obj.GetComponent<NetworkObject>();
+
+            if (netObj == null)
+            {
+                Debug.LogError("[MachineGun] ProjectilePrefab не имеет NetworkObject.");
+                Destroy(obj);
+                return;
+            }
+
             netObj.SpawnWithOwnership(OwnerClientId, destroyWithScene: true);
 
-            // Pass damage from SO so the projectile doesn't need its own hardcoded value
             var projectile = obj.GetComponent<ProjectileBase>();
-            projectile.Initialize(OwnerClientId, Damage);
+            if (projectile != null)
+                projectile.Initialize(OwnerClientId, Damage);
         }
 
         protected override void PlayMuzzleEffect()
@@ -41,12 +50,8 @@ namespace CarDerby.Combat
         }
     }
 
-    // ── Bullet projectile ─────────────────────────────────────────────────────
+    // ── Bullet ───────────────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Generic fast bullet. Speed and lifetime are the only values it owns;
-    /// damage is injected by MachineGun via ProjectileBase.Initialize().
-    /// </summary>
     public sealed class BulletProjectile : ProjectileBase
     {
         protected override float Speed    => 40f;

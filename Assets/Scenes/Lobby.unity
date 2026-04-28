@@ -629,6 +629,7 @@ MonoBehaviour:
   _lobby: {fileID: 1767444599}
   _cars: {fileID: 1986502403}
   _weapons: {fileID: 1066361413}
+  _gameSceneName: GameScene
 --- !u!114 &721676764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -842,8 +843,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Customization.WeaponSelectionSystem
   _weaponRoster:
+  - {fileID: 11400000, guid: a93fcc5e9d17a4b36bcea11823de6b16, type: 2}
   - {fileID: 11400000, guid: 82a2e7a19462a4aac86e68c5d32f50a7, type: 2}
-  - {fileID: 11400000, guid: 1246e2e68ce6048a086d8a7c647689c1, type: 2}
+  - {fileID: 11400000, guid: 5f91925526d184ac292b3d29991a7dbc, type: 2}
 --- !u!1001 &1288754899
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -981,6 +983,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Networking.LobbyManager
   ShowTopMostFoldoutHeaderGroup: 1
   _maxPlayers: 8
+  _minPlayers: 1
   _lobbyName: My Lobby
 --- !u!1 &1931826102
 GameObject:
@@ -1122,6 +1125,7 @@ MonoBehaviour:
   _carRoster:
   - {fileID: 11400000, guid: 160c3077bbb99421eba91453000bd205, type: 2}
   - {fileID: 11400000, guid: 0122012eefa304656b54436a883eee1a, type: 2}
+  - {fileID: 11400000, guid: d5b12185421044efc9f544eb22af8355, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

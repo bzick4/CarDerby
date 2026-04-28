@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2ebf93d04137e4d0988748d2d04eadce, type: 3}
-  m_Name: Scoop
+  m_Name: Turret
   m_EditorClassIdentifier: Assembly-CSharp::CarDerby.SO.WeaponDataSO
-  WeaponName: Scoop
+  WeaponName: Turret
   Icon: {fileID: 0}
   Description: 
-  WeaponPrefab: {fileID: 3751287056795788329, guid: 444e9e5f6701b4b16be864de873d7d44, type: 3}
-  IsFrontScoop: 1
-  Damage: 15
-  FireRate: 0
+  WeaponPrefab: {fileID: 6835897075377069744, guid: 994e3a774b9bc40b48f9e0a039bf0cb6, type: 3}
+  IsFrontScoop: 0
+  Damage: 30
+  FireRate: 8
   ProjectilePrefab: {fileID: 0}
-  BonusDamage: 30
-  SpeedFactor: 0.7
-  CollisionCooldown: 0
+  BonusDamage: 0
+  SpeedFactor: 0
+  CollisionCooldown: 0.4

@@ -73,6 +73,13 @@ namespace CarDerby.UI
 
             _session.StartHost("0.0.0.0", port, pass);
 
+            // StartHost может упасть (занятый порт и т.п.) — проверяем до загрузки сцены
+            if (!NetworkManager.Singleton.IsHost)
+            {
+                Debug.LogError($"[MainMenuUI] StartHost не удался — порт {port} занят или другая ошибка.");
+                return;
+            }
+
             _browser.RegisterHostedServer(new Networking.ServerInfo
             {
                 Name        = string.IsNullOrWhiteSpace(name) ? "My Derby" : name,

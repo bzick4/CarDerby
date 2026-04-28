@@ -220,10 +220,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2084413195363887896}
-  - component: {fileID: 4295467638615213470}
-  - component: {fileID: 7709432870715604517}
+  - component: {fileID: 1765734579988565196}
   m_Layer: 0
-  m_Name: WeaponPoint
+  m_Name: WeaponSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -244,7 +243,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6952962257714768987}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4295467638615213470
+--- !u!114 &1765734579988565196
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -253,40 +252,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2486056353831558059}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Script: {fileID: 11500000, guid: 2c80eddc10fff402083a2fbbc12e690e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 0
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  DeferredDespawnTick: 0
-  Ownership: 1
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
---- !u!114 &7709432870715604517
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2486056353831558059}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c30ff3b6e407648c7886e023a7354fd0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Combat.MachineGun
-  ShowTopMostFoldoutHeaderGroup: 1
-  _weaponData: {fileID: 11400000, guid: 82a2e7a19462a4aac86e68c5d32f50a7, type: 2}
-  _weaponMount: {fileID: 2084413195363887896}
-  _muzzlePoint: {fileID: 2084413195363887896}
-  _muzzleFlash: {fileID: 0}
-  _fireAudio: {fileID: 0}
+  m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Car.CarWeaponSlot
 --- !u!1 &4347436342129748844
 GameObject:
   m_ObjectHideFlags: 0
@@ -1107,11 +1075,11 @@ MonoBehaviour:
   AuthorityMode: 0
   TickSyncChildren: 0
   UseUnreliableDeltas: 0
-  SyncPositionX: 1
+  SyncPositionX: 0
   SyncPositionY: 1
-  SyncPositionZ: 1
+  SyncPositionZ: 0
   SyncRotAngleX: 1
-  SyncRotAngleY: 1
+  SyncRotAngleY: 0
   SyncRotAngleZ: 1
   SyncScaleX: 1
   SyncScaleY: 1
@@ -1191,7 +1159,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Player.PlayerNetwork
   ShowTopMostFoldoutHeaderGroup: 1
   _carController: {fileID: 9124414942350236600}
-  _weaponController: {fileID: 7709432870715604517}
+  _weaponController: {fileID: 0}
   _healthSystem: {fileID: 4037177265153440750}
   _inputHandler: {fileID: 776873993639547830}
   _cameraRig: {fileID: 8672942426941980960}
@@ -1239,5 +1207,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Player.PlayerInputHandler
   _carController: {fileID: 9124414942350236600}
-  _weaponController: {fileID: 7709432870715604517}
+  _weaponController: {fileID: 0}
   _playerCamera: {fileID: 4644478774117380169}

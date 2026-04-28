@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2ebf93d04137e4d0988748d2d04eadce, type: 3}
-  m_Name: Scoop
+  m_Name: MiniGun
   m_EditorClassIdentifier: Assembly-CSharp::CarDerby.SO.WeaponDataSO
-  WeaponName: Scoop
+  WeaponName: MiniGun
   Icon: {fileID: 0}
   Description: 
-  WeaponPrefab: {fileID: 3751287056795788329, guid: 444e9e5f6701b4b16be864de873d7d44, type: 3}
-  IsFrontScoop: 1
-  Damage: 15
-  FireRate: 0
+  WeaponPrefab: {fileID: 2907402603222351798, guid: 694a30333080946a5a9447c667d6703e, type: 3}
+  IsFrontScoop: 0
+  Damage: 30
+  FireRate: 8
   ProjectilePrefab: {fileID: 0}
-  BonusDamage: 30
-  SpeedFactor: 0.7
-  CollisionCooldown: 0
+  BonusDamage: 0
+  SpeedFactor: 0
+  CollisionCooldown: 0.4

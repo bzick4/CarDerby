@@ -53,6 +53,9 @@ namespace CarDerby.Networking
 
         public LobbyPlayerData GetPlayer(int index) => _players[index];
 
+        // Прямой доступ к NetworkList — LobbyUI подписывается на OnListChanged напрямую
+        public NetworkList<LobbyPlayerData> Players => _players;
+
         public event Action OnLobbyChanged;
 
         public override void OnNetworkSpawn()
@@ -168,19 +171,18 @@ namespace CarDerby.Networking
             {
                 if (_players[i].ClientId == clientId)
                 {
-                    _players[i] = mutate(_players[i]);
-                    // Стреляем событие напрямую на сервере/хосте — не ждём ClientRpc round-trip
+                    // NGO NetworkList не сохраняет изменения через [i] = value.
+                    // Единственный надёжный способ обновить элемент — Remove + Insert.
+                    var updated = mutate(_players[i]);
+                    _players.RemoveAt(i);
+                    _players.Insert(i, updated);
                     OnLobbyChanged?.Invoke();
                     return;
                 }
             }
 
-            // Если сюда дошли — clientId не совпал ни с одним игроком.
-            // Выводим всех игроков чтобы понять расхождение.
             Debug.LogWarning($"[LobbyManager] UpdatePlayer: клиент {clientId} не найден. " +
                              $"Игроков в списке: {_players.Count}");
-            for (int i = 0; i < _players.Count; i++)
-                Debug.LogWarning($"  [{i}] clientId={_players[i].ClientId}");
         }
 
         // ClientRpc нужен для обновления UI на УДАЛЁННЫХ клиентах (не хост)
