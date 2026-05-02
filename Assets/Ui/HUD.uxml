@@ -16,6 +16,12 @@
             <ui:Label name="health-value" text="100" class="hud-value" />
         </ui:VisualElement>
 
+        <!-- Speed — bottom-right -->
+        <ui:VisualElement name="speed-container" class="speed-container" picking-mode="Ignore">
+            <ui:Label name="speed-value" text="0" class="speed-value" />
+            <ui:Label text="КМ/Ч" class="speed-unit" />
+        </ui:VisualElement>
+
         <!-- Enemy world-space HP bars are injected here at runtime by WorldSpaceHealthBar.cs -->
         <ui:VisualElement name="ws-overlay" class="ws-overlay" picking-mode="Ignore" />
 

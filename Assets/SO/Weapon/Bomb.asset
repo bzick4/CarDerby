@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2ebf93d04137e4d0988748d2d04eadce, type: 3}
-  m_Name: Shocker
+  m_Name: Bomb
   m_EditorClassIdentifier: Assembly-CSharp::CarDerby.SO.WeaponDataSO
-  WeaponName: Shocker
-  Icon: {fileID: 21300000, guid: 78add9799ab124063b2c6dc5b6ff4d3f, type: 3}
+  WeaponName: Bomb
+  Icon: {fileID: 21300000, guid: d466189c79b52456c8fb9e1937baf705, type: 3}
   Description: 
-  WeaponPrefab: {fileID: 8638908306830585388, guid: d56e92ebc121a43eb92b5b299c7398c5, type: 3}
+  WeaponPrefab: {fileID: 8789386096971707235, guid: bd21997583c3a4817b16702b33e6e743, type: 3}
   IsFrontScoop: 0
   Damage: 30
   FireRate: 8
-  ProjectilePrefab: {fileID: 0}
+  ProjectilePrefab: {fileID: 4486571362548146129, guid: b5fab3463e91e4bf4931f00cf5ceebb3, type: 3}
   BonusDamage: 0
   SpeedFactor: 0
   CollisionCooldown: 0.4

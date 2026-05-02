@@ -20,66 +20,93 @@ namespace CarDerby.Networking
     }
 
     /// <summary>
-    /// Abstracts server discovery. Currently implements direct-connect + a
-    /// manual server list. Swap DiscoverServersAsync() to use UGS Lobby if needed.
+    /// Обёртка над LanDiscovery.
+    /// RefreshAsync() запускает UDP-прослушивание и ждёт 2 сек для сбора ответов.
+    /// RegisterHostedServer() запускает UDP-рассылку.
     /// </summary>
     public class ServerBrowser : MonoBehaviour
     {
         [SerializeField] private SessionManager _sessionManager;
+        [SerializeField] private LanDiscovery   _lanDiscovery;
 
-        // Manual server entries (populated by host registration or a simple relay)
         private readonly List<ServerInfo> _serverList = new();
 
         public IReadOnlyList<ServerInfo> Servers => _serverList;
 
         public event Action OnServersRefreshed;
 
+        private void Awake()
+        {
+            if (_lanDiscovery != null)
+                _lanDiscovery.OnServerDiscovered += OnServerDiscovered;
+        }
+
+        private void OnDestroy()
+        {
+            if (_lanDiscovery != null)
+                _lanDiscovery.OnServerDiscovered -= OnServerDiscovered;
+        }
+
         // ── Public API ───────────────────────────────────────────────────────
 
-        /// <summary>Populate _serverList. Extend to call UGS QueryLobbiesAsync here.</summary>
+        /// <summary>Запускает прослушивание LAN и ждёт 2 сек для сбора серверов.</summary>
         public async Task RefreshAsync()
         {
             _serverList.Clear();
+            OnServersRefreshed?.Invoke(); // очищаем UI сразу
 
-            // Stub: in production replace with UGS Lobby QueryLobbiesAsync or a relay API call.
-            await Task.Yield();
+            if (_lanDiscovery == null)
+            {
+                Debug.LogWarning("[ServerBrowser] LanDiscovery не назначен в Inspector.");
+                return;
+            }
+
+            _lanDiscovery.StartListening();
+
+            // Ждём пока серверы ответят
+            await Task.Delay(2000);
+
+            // Забираем всё что нашли
+            _serverList.Clear();
+            foreach (var info in _lanDiscovery.GetDiscoveredServers())
+                _serverList.Add(info);
 
             OnServersRefreshed?.Invoke();
         }
 
-        /// <summary>Add a locally-known server (e.g. typed-in IP).</summary>
-        public void AddManualServer(string name, string ip, ushort port, bool hasPassword, string gameMode)
+        /// <summary>Регистрирует хост — начинает рассылку по LAN.</summary>
+        public void RegisterHostedServer(ServerInfo info)
         {
-            _serverList.Add(new ServerInfo
-            {
-                Name           = name,
-                IpAddress      = ip,
-                Port           = port,
-                CurrentPlayers = 0,
-                MaxPlayers     = 8,
-                HasPassword    = hasPassword,
-                GameMode       = gameMode,
-                PingMs         = -1,
-            });
+            if (_lanDiscovery != null)
+                _lanDiscovery.StartBroadcasting(info);
 
-            OnServersRefreshed?.Invoke();
+            Debug.Log($"[ServerBrowser] Hosting: {info.Name} @ {info.IpAddress}:{info.Port}");
         }
 
         public void JoinServer(ServerInfo info, string password = "")
         {
+            _lanDiscovery?.Stop();
             _sessionManager.StartClient(info.IpAddress, info.Port, password);
         }
 
-        // ── Host registration ────────────────────────────────────────────────
+        // ── Private ──────────────────────────────────────────────────────────
 
-        /// <summary>
-        /// Call this after StartHost to register this session so LAN clients
-        /// can discover it (or forward to a relay API for internet-wide listing).
-        /// </summary>
-        public void RegisterHostedServer(ServerInfo info)
+        private void OnServerDiscovered(ServerInfo info)
         {
-            // In production: POST to a relay REST endpoint or UGS CreateLobby.
-            Debug.Log($"[ServerBrowser] Registered: {info.Name} @ {info.IpAddress}:{info.Port}");
+            // Обновляем в реальном времени — добавляем/обновляем в списке
+            bool found = false;
+            for (int i = 0; i < _serverList.Count; i++)
+            {
+                if (_serverList[i].IpAddress == info.IpAddress && _serverList[i].Port == info.Port)
+                {
+                    _serverList[i] = info;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) _serverList.Add(info);
+
+            OnServersRefreshed?.Invoke();
         }
     }
 }

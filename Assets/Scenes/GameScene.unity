@@ -161,6 +161,7 @@ GameObject:
   - component: {fileID: 157503244}
   - component: {fileID: 157503243}
   - component: {fileID: 157503242}
+  - component: {fileID: 157503245}
   m_Layer: 0
   m_Name: HUD
   m_TagString: Untagged
@@ -218,6 +219,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &157503245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 157503241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdf2eff028b1847ccafb44b2cf82adbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CarDerby.UI.GameHUD
 --- !u!1 &281693283
 GameObject:
   m_ObjectHideFlags: 0
@@ -368,9 +381,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bf26f5913eb6405585afa21eb2ec611, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Player.SceneCamera
-  _offset: {x: 0, y: 6, z: -10}
-  _positionDamping: 5
-  _rotationDamping: 8
+  _distance: 10
+  _targetHeight: 1.5
+  _pitch: 20
+  _sensitivityX: 3
+  _followSmooth: 8
 --- !u!1 &404784300
 GameObject:
   m_ObjectHideFlags: 0
@@ -614,7 +629,12 @@ MonoBehaviour:
   _matchDuration: 300
   _killsToWin: 15
   _respawnDelay: 3
-  _spawnPoints: []
+  _spawnPoints:
+  - {fileID: 1621650156}
+  - {fileID: 1606362695}
+  - {fileID: 1126621035}
+  - {fileID: 108915709}
+  - {fileID: 823248694}
 --- !u!1 &1406815397
 GameObject:
   m_ObjectHideFlags: 0
@@ -691,8 +711,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0122012eefa304656b54436a883eee1a, type: 2}
   - {fileID: 11400000, guid: d5b12185421044efc9f544eb22af8355, type: 2}
   _weaponRoster:
+  - {fileID: 11400000, guid: be7ef832fbb1341c6a1d78577f06d63f, type: 2}
+  - {fileID: 11400000, guid: ee20a3c0cd6f34953a104111f7c1c3eb, type: 2}
   - {fileID: 11400000, guid: a93fcc5e9d17a4b36bcea11823de6b16, type: 2}
   - {fileID: 11400000, guid: 82a2e7a19462a4aac86e68c5d32f50a7, type: 2}
+  - {fileID: 11400000, guid: f943d87a49d57495da81ad92912f6366, type: 2}
   - {fileID: 11400000, guid: 5f91925526d184ac292b3d29991a7dbc, type: 2}
   _spawnPoints:
   - {fileID: 1621650156}

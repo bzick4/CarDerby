@@ -54,6 +54,8 @@ namespace CarDerby.Networking
         public void StartClient(string ip, ushort port, string password = "")
         {
             ConfigureTransport(ip, port);
+            // Должно совпадать с настройкой хоста иначе NGO отклонит по хэшу конфига
+            _networkManager.NetworkConfig.ConnectionApproval = true;
             // Embed password in connection payload so the server can validate it
             _networkManager.NetworkConfig.ConnectionData = Encoding.UTF8.GetBytes(password);
             _networkManager.OnClientDisconnectCallback  += HandleClientDisconnect;

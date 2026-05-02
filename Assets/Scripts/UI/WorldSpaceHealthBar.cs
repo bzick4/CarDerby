@@ -32,15 +32,15 @@ namespace CarDerby.UI
         /// <summary>Call this once the enemy player's HealthSystem is ready.</summary>
         public void Initialize(Health.HealthSystem hs)
         {
-            if (HealthBarUI.Instance == null)
+            if (GameHUD.Instance == null)
             {
-                Debug.LogWarning("[WorldSpaceHealthBar] No HealthBarUI.Instance found — bar will not show.");
+                Debug.LogWarning("[WorldSpaceHealthBar] GameHUD.Instance не найден — полоска HP врага не отобразится.");
                 return;
             }
 
             _healthSystem = hs;
             _cam          = Camera.main;
-            _bar          = HealthBarUI.Instance.RegisterEnemyBar(out _fill);
+            _bar          = GameHUD.Instance.RegisterEnemyBar(out _fill);
 
             _healthSystem.OnHealthChanged += UpdateFill;
             _healthSystem.OnDeath         += OnOwnerDied;

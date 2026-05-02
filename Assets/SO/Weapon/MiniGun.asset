@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MiniGun
   m_EditorClassIdentifier: Assembly-CSharp::CarDerby.SO.WeaponDataSO
   WeaponName: MiniGun
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: b00ba14749d244d4ca5718085100e134, type: 3}
   Description: 
   WeaponPrefab: {fileID: 2907402603222351798, guid: 694a30333080946a5a9447c667d6703e, type: 3}
   IsFrontScoop: 0

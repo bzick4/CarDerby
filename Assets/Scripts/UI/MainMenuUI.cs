@@ -1,4 +1,5 @@
 // Assets/Scripts/UI/MainMenuUI.cs
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
@@ -90,10 +91,9 @@ namespace CarDerby.UI
                 GameMode    = "Deathmatch",
             });
 
-            // Загружаем через NGO SceneManager — это регистрирует все NetworkObject-ы
-            // в Lobby сцене (LobbyManager и др.) и синхронизирует сцену всем клиентам.
-            if (!TryNgoLoadScene(_lobbySceneName))
-                Debug.LogError("[MainMenuUI] StartHost succeeded but scene load failed.");
+            // NGO при старте хоста запускает внутренний SceneEvent (синхронизацию).
+            // Ждём его завершения — только потом грузим лобби.
+            StartCoroutine(LoadLobbyWhenReady(_lobbySceneName));
         }
 
         private void OnConfirmJoin()
@@ -107,6 +107,31 @@ namespace CarDerby.UI
 
             // Клиент только коннектится — сцену ему загрузит сервер через NGO.
             _session.StartClient(ip, port, pass);
+        }
+
+        private IEnumerator LoadLobbyWhenReady(string sceneName)
+        {
+            // Ждём пока NGO завершит внутренний scene event (до 3 сек)
+            float timeout = 3f;
+            while (timeout > 0f)
+            {
+                var status = NetworkManager.Singleton.SceneManager
+                    .LoadScene(sceneName, LoadSceneMode.Single);
+
+                if (status == SceneEventProgressStatus.Started)
+                    yield break; // успешно запустили загрузку
+
+                if (status != SceneEventProgressStatus.SceneEventInProgress)
+                {
+                    Debug.LogError($"[MainMenuUI] LoadScene вернул: {status}");
+                    yield break;
+                }
+
+                yield return null; // ждём кадр и пробуем снова
+                timeout -= Time.deltaTime;
+            }
+
+            Debug.LogError("[MainMenuUI] Таймаут ожидания SceneEvent — лобби не загружено.");
         }
 
         private async void OpenBrowser()

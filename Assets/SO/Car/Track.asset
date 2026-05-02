@@ -10,13 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c51b1f6ef37bc437a9f01d2c5109f98c, type: 3}
-  m_Name: CarData_Sport
+  m_Name: Track
   m_EditorClassIdentifier: Assembly-CSharp::CarDerby.SO.CarDataSO
-  CarName: Sport
+  CarName: Track
   PreviewSprite: {fileID: 0}
   Description: 
-  NetworkPrefab: {fileID: 8672942426941980960, guid: 53f18198256dc404c97e5a8ffbea07b5, type: 3}
-  MaxHealth: 100
-  SpeedMultiplier: 1
+  NetworkPrefab: {fileID: 8672942426941980960, guid: 4de102630dfba41b59a8fcdd25d29731, type: 3}
+  MaxHealth: 150
   MassKg: 1500
-  AccelMultiplier: 1
+  MaxSpeedKmh: 30
+  MotorTorque: 1500
+  BrakeTorque: 3000
+  MaxSteerAngle: 30
+  DownForce: 500

@@ -85,12 +85,35 @@ namespace CarDerby.Gameplay
                 return;
             }
 
+            // Применяем данные SO ДО спавна — чтобы OnNetworkSpawn видел правильные значения
+            var carSO = _carRoster[Mathf.Clamp(loadout.CarIndex, 0, _carRoster.Length - 1)];
+            ApplyCarData(instance, carSO);
+
             netObj.SpawnWithOwnership(clientId);
 
             // Инжектируем WeaponDataSO выбранный игроком в лобби
             InjectWeaponData(instance, loadout.WeaponIndex);
 
             Debug.Log($"[PlayerSpawner] Spawned '{prefab.name}' for client {clientId} at {spawnPos}");
+        }
+
+        // ── Car data injection ───────────────────────────────────────────────
+
+        private void ApplyCarData(GameObject car, CarDataSO data)
+        {
+            if (data == null) return;
+
+            // Rigidbody масса
+            var rb = car.GetComponent<Rigidbody>();
+            if (rb != null) rb.mass = data.MassKg;
+
+            // CarPhysics — скорость, крутящий момент и т.д.
+            var physics = car.GetComponent<Car.CarPhysics>();
+            if (physics != null) physics.Initialize(data);
+
+            // HealthSystem — HP из SO
+            var health = car.GetComponent<Health.HealthSystem>();
+            if (health != null) health.Initialize(data.MaxHealth);
         }
 
         // ── Weapon injection ─────────────────────────────────────────────────

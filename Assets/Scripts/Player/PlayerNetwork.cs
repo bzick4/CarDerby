@@ -1,5 +1,6 @@
 // Assets/Scripts/Player/PlayerNetwork.cs
 using System;
+using System.Collections;
 using UnityEngine;
 using Unity.Netcode;
 using Unity.Collections;
@@ -21,6 +22,7 @@ namespace CarDerby.Player
     public class PlayerNetwork : NetworkBehaviour
     {
         [SerializeField] private Car.CarController          _carController;
+        [SerializeField] private Car.CarPhysics             _carPhysics;
         [SerializeField] private Combat.WeaponController    _weaponController;
         [SerializeField] private Health.HealthSystem        _healthSystem;
         [SerializeField] private PlayerInputHandler         _inputHandler;
@@ -46,14 +48,13 @@ namespace CarDerby.Player
             if (IsOwner)
             {
                 _inputHandler.enabled = true;
-                // Говорим единственной сцен-камере следить за этой машиной
-                SceneCamera.Instance?.Follow(transform);
                 _worldSpaceHealthBar.gameObject.SetActive(false);
+                StartCoroutine(BindLocalPlayerDelayed());
             }
             else
             {
                 _inputHandler.enabled = false;
-                _worldSpaceHealthBar.Initialize(_healthSystem);
+                StartCoroutine(BindEnemyBarDelayed());
             }
 
             if (IsServer)
@@ -64,6 +65,49 @@ namespace CarDerby.Player
         {
             if (IsServer)
                 _healthSystem.OnDeath -= HandleDeath;
+        }
+
+        // ── Delayed binding (ждём пока сцена-синглтоны проинициализируются) ───
+
+        private IEnumerator BindLocalPlayerDelayed()
+        {
+            // Ждём до двух секунд пока SceneCamera и GameHUD появятся в сцене
+            float timeout = 2f;
+            SceneCamera cam = null;
+            UI.GameHUD  hud = null;
+
+            while (timeout > 0f)
+            {
+                cam = SceneCamera.Instance ?? FindFirstObjectByType<SceneCamera>();
+                hud = UI.GameHUD.Instance  ?? FindFirstObjectByType<UI.GameHUD>();
+
+                if (cam != null && hud != null) break;
+
+                yield return null;
+                timeout -= Time.deltaTime;
+            }
+
+            if (cam != null)
+                cam.Follow(transform);
+            else
+                Debug.LogWarning("[PlayerNetwork] SceneCamera не найдена в сцене.");
+
+            if (hud != null && _carPhysics != null)
+                hud.Bind(_carPhysics, _healthSystem);
+            else if (hud == null)
+                Debug.LogWarning("[PlayerNetwork] GameHUD не найден в сцене.");
+        }
+
+        private IEnumerator BindEnemyBarDelayed()
+        {
+            // Ждём пока GameHUD проинициализируется
+            float timeout = 2f;
+            while (UI.GameHUD.Instance == null && timeout > 0f)
+            {
+                yield return null;
+                timeout -= Time.deltaTime;
+            }
+            _worldSpaceHealthBar.Initialize(_healthSystem);
         }
 
         // ── Server-only methods ──────────────────────────────────────────────

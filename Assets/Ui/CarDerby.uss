@@ -105,10 +105,23 @@
     margin: 5px 0;
     height: 38px;
     font-size: 14px;
-    color: white;
+    color: rgb(220, 220, 220);
     background-color: rgba(40, 40, 40, 0.9);
     border-color: rgba(120, 120, 120, 0.5);
     border-radius: 4px;
+}
+
+/* UIToolkit рендерит текст внутри дочернего элемента — красим его отдельно */
+.input-field > .unity-base-field__input {
+    background-color: rgba(40, 40, 40, 0.9);
+    color: rgb(220, 220, 220);
+    border-width: 0;
+    border-radius: 4px;
+}
+
+.input-field > .unity-base-field__input:focus {
+    border-color: rgba(200, 50, 50, 0.8);
+    border-width: 1px;
 }
 
 .dropdown {
@@ -258,6 +271,31 @@
     font-size: 14px;
     -unity-font-style: bold;
     margin-left: 8px;
+}
+
+.speed-container {
+    position: absolute;
+    bottom: 28px;
+    right: 24px;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.speed-value {
+    color: white;
+    font-size: 52px;
+    -unity-font-style: bold;
+    -unity-text-align: lower-right;
+    line-height: 1;
+}
+
+.speed-unit {
+    color: rgb(180, 180, 180);
+    font-size: 13px;
+    -unity-font-style: bold;
+    letter-spacing: 2px;
+    -unity-text-align: upper-right;
+    margin-top: -4px;
 }
 
 /* world-space enemy bar overlay — covers full screen, pointer events off */

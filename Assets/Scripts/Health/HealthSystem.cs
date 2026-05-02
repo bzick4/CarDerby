@@ -12,7 +12,11 @@ namespace CarDerby.Health
     /// </summary>
     public class HealthSystem : NetworkBehaviour
     {
-        [SerializeField] private float _maxHealth = 100f;
+        // Оба значения — NetworkVariable, чтобы клиенты видели данные из SO
+        private readonly NetworkVariable<float> _maxHealth = new(
+            100f,
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Server);
 
         private readonly NetworkVariable<float> _currentHealth = new(
             0f,
@@ -20,22 +24,34 @@ namespace CarDerby.Health
             NetworkVariableWritePermission.Server);
 
         public float CurrentHealth  => _currentHealth.Value;
-        public float MaxHealth      => _maxHealth;
-        public float HealthPercent  => _maxHealth > 0f ? _currentHealth.Value / _maxHealth : 0f;
+        public float MaxHealth      => _maxHealth.Value;
+        public float HealthPercent  => _maxHealth.Value > 0f ? _currentHealth.Value / _maxHealth.Value : 0f;
         public bool  IsDead         => _currentHealth.Value <= 0f;
 
         // Clients subscribe to these for UI / VFX updates.
         public event Action<float, float> OnHealthChanged; // (current, max)
         public event Action<ulong>        OnDeath;         // (killerClientId)
 
+        /// <summary>Вызывается PlayerSpawner до SpawnWithOwnership — задаёт MaxHealth из SO.</summary>
+        public void Initialize(float maxHealth)
+        {
+            // Сохраняем до спавна; OnNetworkSpawn подхватит это значение
+            _pendingMaxHealth = Mathf.Max(1f, maxHealth);
+        }
+
+        private float _pendingMaxHealth = 100f;
+
         public override void OnNetworkSpawn()
         {
             if (IsServer)
-                _currentHealth.Value = _maxHealth;
+            {
+                _maxHealth.Value     = _pendingMaxHealth;
+                _currentHealth.Value = _pendingMaxHealth;
+            }
 
             // Mirror NetworkVariable changes into the C# event for local subscribers.
             _currentHealth.OnValueChanged += (_, newVal) =>
-                OnHealthChanged?.Invoke(newVal, _maxHealth);
+                OnHealthChanged?.Invoke(newVal, _maxHealth.Value);
         }
 
         // ── Server-only public API ────────────────────────────────────────────
@@ -57,7 +73,7 @@ namespace CarDerby.Health
         public void Heal(float amount)
         {
             if (!IsServer) return;
-            _currentHealth.Value = Mathf.Min(_maxHealth, _currentHealth.Value + amount);
+            _currentHealth.Value = Mathf.Min(_maxHealth.Value, _currentHealth.Value + amount);
         }
 
         // ── Internal ─────────────────────────────────────────────────────────
@@ -71,7 +87,7 @@ namespace CarDerby.Health
         [ClientRpc]
         private void TriggerFeedbackClientRpc(float newHealth)
         {
-            OnHealthChanged?.Invoke(newHealth, _maxHealth);
+            OnHealthChanged?.Invoke(newHealth, _maxHealth.Value);
         }
 
         [ClientRpc]
