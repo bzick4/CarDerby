@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 641818519950403608}
   serializedVersion: 2
   m_LocalRotation: {x: -0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 0, y: 0.071, z: 0}
+  m_LocalPosition: {x: 0, y: 0.08763752, z: 0}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -137,7 +137,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Combat.MachineGun
   _weaponData: {fileID: 11400000, guid: a93fcc5e9d17a4b36bcea11823de6b16, type: 2}
-  _weaponMount: {fileID: 8493760600381742477}
+  _weaponMount: {fileID: 5445606787943944727}
   _muzzlePoint: {fileID: 0}
   _muzzleFlash: {fileID: 0}
   _fireAudio: {fileID: 0}

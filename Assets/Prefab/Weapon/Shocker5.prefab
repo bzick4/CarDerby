@@ -189,6 +189,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7625483161557310819}
+  - component: {fileID: 3742223945074439678}
   m_Layer: 0
   m_Name: Shocker5
   m_TagString: Untagged
@@ -213,3 +214,20 @@ Transform:
   - {fileID: 6005163307355121679}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3742223945074439678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8638908306830585388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c30ff3b6e407648c7886e023a7354fd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Combat.MachineGun
+  _weaponData: {fileID: 11400000, guid: 82a2e7a19462a4aac86e68c5d32f50a7, type: 2}
+  _weaponMount: {fileID: 7625483161557310819}
+  _muzzlePoint: {fileID: 0}
+  _muzzleFlash: {fileID: 0}
+  _fireAudio: {fileID: 0}

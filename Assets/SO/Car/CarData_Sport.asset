@@ -15,7 +15,7 @@ MonoBehaviour:
   CarName: Sport
   PreviewSprite: {fileID: 0}
   Description: 
-  NetworkPrefab: {fileID: 4891897987167349224, guid: 6d50d62349cbc403bb21f64fcfdc3428, type: 3}
+  NetworkPrefab: {fileID: 8672942426941980960, guid: 53f18198256dc404c97e5a8ffbea07b5, type: 3}
   MaxHealth: 100
   SpeedMultiplier: 1
   MassKg: 1500

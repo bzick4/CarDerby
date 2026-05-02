@@ -24,7 +24,6 @@ namespace CarDerby.Player
         [SerializeField] private Combat.WeaponController    _weaponController;
         [SerializeField] private Health.HealthSystem        _healthSystem;
         [SerializeField] private PlayerInputHandler         _inputHandler;
-        [SerializeField] private GameObject                 _cameraRig;
         [SerializeField] private UI.WorldSpaceHealthBar     _worldSpaceHealthBar;
 
         // ── Networked state (readable by all, written by server / owner) ─────
@@ -47,13 +46,13 @@ namespace CarDerby.Player
             if (IsOwner)
             {
                 _inputHandler.enabled = true;
-                _cameraRig.SetActive(true);
-                _worldSpaceHealthBar.gameObject.SetActive(false); // never show own HP bar above own car
+                // Говорим единственной сцен-камере следить за этой машиной
+                SceneCamera.Instance?.Follow(transform);
+                _worldSpaceHealthBar.gameObject.SetActive(false);
             }
             else
             {
                 _inputHandler.enabled = false;
-                _cameraRig.SetActive(false);
                 _worldSpaceHealthBar.Initialize(_healthSystem);
             }
 

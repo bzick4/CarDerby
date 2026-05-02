@@ -60,14 +60,14 @@ namespace CarDerby.Combat
         {
             if (!IsOwner) return;
 
-            // Крутим ствол локально — при желании можно добавить ServerRpc
-            // через WeaponNetworkBridge на корневом объекте
             if (_weaponMount != null)
             {
-                Vector3 dir = worldPoint - transform.position;
+                // Считаем направление от позиции самой башни, а не корня оружия
+                Vector3 pivot = _weaponMount.position;
+                Vector3 dir   = worldPoint - pivot;
                 dir.y = 0f;
                 if (dir.sqrMagnitude > 0.001f)
-                    _weaponMount.localRotation = Quaternion.LookRotation(dir.normalized);
+                    _weaponMount.rotation = Quaternion.LookRotation(dir.normalized);
             }
         }
 

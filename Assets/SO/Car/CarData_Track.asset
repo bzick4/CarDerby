@@ -15,7 +15,7 @@ MonoBehaviour:
   CarName: Track
   PreviewSprite: {fileID: 0}
   Description: 
-  NetworkPrefab: {fileID: 7184341214914632179, guid: 800cd95e0092c44fca093c51e8aefb0b, type: 3}
+  NetworkPrefab: {fileID: 8672942426941980960, guid: 4de102630dfba41b59a8fcdd25d29731, type: 3}
   MaxHealth: 100
   SpeedMultiplier: 1
   MassKg: 1500

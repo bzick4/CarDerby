@@ -12,15 +12,13 @@ namespace CarDerby.Player
     {
         [SerializeField] private Car.CarController       _carController;
         [SerializeField] private Combat.WeaponController _weaponController;
-        [SerializeField] private Camera                  _playerCamera;
 
         private static readonly int _groundMask = ~0;
 
         private void Awake()
         {
             if (_carController == null) _carController = GetComponentInChildren<Car.CarController>();
-            if (_playerCamera  == null) _playerCamera  = GetComponentInChildren<Camera>();
-            // WeaponController не ищем здесь — оружие спавнится позже чем Awake
+            // WeaponController не ищем здесь — оружие спавнится позже Awake
         }
 
         private void Update()
@@ -44,13 +42,18 @@ namespace CarDerby.Player
             if (_carController != null)
                 _carController.SubmitInputServerRpc(throttle, steering, braking, nitro, drifting);
 
-            // ── Прицеливание ──────────────────────────────────────────────────
-            if (_weaponController != null && _playerCamera != null)
+            // ── Прицеливание — горизонтальное направление камеры, точка далеко впереди
+            var cam = Camera.main;
+            if (_weaponController != null && cam != null)
             {
-                Vector2 screenPos = mouse.position.ReadValue();
-                Ray ray = _playerCamera.ScreenPointToRay(screenPos);
-                if (Physics.Raycast(ray, out RaycastHit hit, 200f, _groundMask))
-                    _weaponController.AimAt(hit.point);
+                Vector3 flatForward = cam.transform.forward;
+                flatForward.y = 0f;
+                if (flatForward.sqrMagnitude > 0.001f)
+                {
+                    flatForward.Normalize();
+                    Vector3 aimPoint = transform.position + flatForward * 100f;
+                    _weaponController.AimAt(aimPoint);
+                }
             }
 
             if (firing && _weaponController != null)

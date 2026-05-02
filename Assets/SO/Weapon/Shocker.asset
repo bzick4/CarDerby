@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ebf93d04137e4d0988748d2d04eadce, type: 3}
+  m_Name: Shocker
+  m_EditorClassIdentifier: Assembly-CSharp::CarDerby.SO.WeaponDataSO
+  WeaponName: Turret
+  Icon: {fileID: 0}
+  Description: 
+  WeaponPrefab: {fileID: 8638908306830585388, guid: d56e92ebc121a43eb92b5b299c7398c5, type: 3}
+  IsFrontScoop: 0
+  Damage: 30
+  FireRate: 8
+  ProjectilePrefab: {fileID: 0}
+  BonusDamage: 0
+  SpeedFactor: 0
+  CollisionCooldown: 0.4

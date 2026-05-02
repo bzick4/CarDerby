@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c51b1f6ef37bc437a9f01d2c5109f98c, type: 3}
   m_Name: CarData_Muscle
   m_EditorClassIdentifier: Assembly-CSharp::CarDerby.SO.CarDataSO
-  CarName: Muscle
+  CarName: Classic
   PreviewSprite: {fileID: 0}
   Description: 
   NetworkPrefab: {fileID: 8672942426941980960, guid: b16bbd486137742cf9bdaf5672c5ac25, type: 3}

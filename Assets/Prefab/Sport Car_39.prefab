@@ -66,7 +66,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f6c483d2f85834989a43636219d73b13, type: 2}
+  - {fileID: 2100000, guid: 3cd56ae59427a4ca28dfd2300bed3e03, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -156,7 +156,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f6c483d2f85834989a43636219d73b13, type: 2}
+  - {fileID: 2100000, guid: 489334a06d2ca4d87842c32d28e3e447, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -193,9 +193,6 @@ GameObject:
   - component: {fileID: 9198631092875765430}
   - component: {fileID: 469787252405863846}
   - component: {fileID: 2803118687275301930}
-  - component: {fileID: -2457794312379003255}
-  - component: {fileID: -7712169743915233739}
-  - component: {fileID: -3109850889338557938}
   m_Layer: 0
   m_Name: Sport Car_39
   m_TagString: Untagged
@@ -255,8 +252,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f6c483d2f85834989a43636219d73b13, type: 2}
-  - {fileID: 6376391939711973161, guid: 3b528f8c4a3a7463a9e1171781b60c2e, type: 3}
+  - {fileID: 2100000, guid: c7f47d57cda124dfaaddd2811aa44558, type: 2}
+  - {fileID: 2100000, guid: c7f47d57cda124dfaaddd2811aa44558, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -332,50 +329,6 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!114 &-2457794312379003255
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4891897987167349224}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7227e84f134a24baaaf29443acb302b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::VehicleController
-  ShowTopMostFoldoutHeaderGroup: 1
-  _moveAction: {fileID: -6001334295539670069, guid: 54629381c017b4cb0b06968f43d1a357, type: 3}
-  _driftBrakeAction: {fileID: 6638343866256454622, guid: 54629381c017b4cb0b06968f43d1a357, type: 3}
-  _carData: {fileID: 11400000, guid: 4d810588422014d10b9e893a97453883, type: 2}
---- !u!114 &-7712169743915233739
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4891897987167349224}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97c20475bf0d14085b601414d9bbac46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HealthComponent
-  ShowTopMostFoldoutHeaderGroup: 1
---- !u!114 &-3109850889338557938
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4891897987167349224}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e8cb7f065af3427baafdc7001a4582b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::VehicleAttachmentSockets
-  ShowTopMostFoldoutHeaderGroup: 1
-  _roofGunSocket: {fileID: 0}
-  _scoopSocket: {fileID: 0}
 --- !u!1 &6213085957137796521
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,7 +395,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f6c483d2f85834989a43636219d73b13, type: 2}
+  - {fileID: 2100000, guid: 41c9bbd1d2592487787a35c1852040ce, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -532,7 +485,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f6c483d2f85834989a43636219d73b13, type: 2}
+  - {fileID: 2100000, guid: a76525530f73e4598a9a224f9059b7c7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

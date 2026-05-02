@@ -108,7 +108,8 @@ namespace CarDerby.Gameplay
             Transform mount = slot != null ? slot.transform : carInstance.transform;
 
             var weaponObj = Instantiate(data.WeaponPrefab, mount);
-            weaponObj.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+            weaponObj.transform.localPosition = Vector3.zero;
+            // localRotation не трогаем — берём из префаба оружия
 
             // Если в префабе оружия есть WeaponController — подставляем SO со статами
             var controller = weaponObj.GetComponent<WeaponController>();

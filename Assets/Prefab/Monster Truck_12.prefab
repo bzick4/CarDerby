@@ -66,7 +66,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f6c483d2f85834989a43636219d73b13, type: 2}
+  - {fileID: 2100000, guid: 4a00222670bdb46ef91426a9b2c2f2be, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -156,7 +156,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f6c483d2f85834989a43636219d73b13, type: 2}
+  - {fileID: 2100000, guid: 1f7102507521544be8bc80c033376a61, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -246,7 +246,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f6c483d2f85834989a43636219d73b13, type: 2}
+  - {fileID: 2100000, guid: 2c59417dabd3b4dbdb195915e5052067, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -283,9 +283,6 @@ GameObject:
   - component: {fileID: 6237929128614561708}
   - component: {fileID: -9064300093939474843}
   - component: {fileID: 5807023160024949425}
-  - component: {fileID: 1033402737851177749}
-  - component: {fileID: 7019521781633671617}
-  - component: {fileID: -3161413231188625327}
   m_Layer: 0
   m_Name: Monster Truck_12
   m_TagString: Untagged
@@ -345,8 +342,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f6c483d2f85834989a43636219d73b13, type: 2}
-  - {fileID: 6376391939711973161, guid: c765b0c3e0d9f4a9b8ff861f13385718, type: 3}
+  - {fileID: 2100000, guid: 6b0955dfbc82f4968ac346ded9a8c414, type: 2}
+  - {fileID: 2100000, guid: 6b0955dfbc82f4968ac346ded9a8c414, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -409,7 +406,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 29911066
+  GlobalObjectIdHash: 384661
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -422,50 +419,6 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!114 &1033402737851177749
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7184341214914632179}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7227e84f134a24baaaf29443acb302b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::VehicleController
-  ShowTopMostFoldoutHeaderGroup: 1
-  _moveAction: {fileID: -6001334295539670069, guid: 54629381c017b4cb0b06968f43d1a357, type: 3}
-  _driftBrakeAction: {fileID: 6638343866256454622, guid: 54629381c017b4cb0b06968f43d1a357, type: 3}
-  _carData: {fileID: 11400000, guid: b0dd17fe7d9c048b094dd284fea4f181, type: 2}
---- !u!114 &7019521781633671617
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7184341214914632179}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97c20475bf0d14085b601414d9bbac46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HealthComponent
-  ShowTopMostFoldoutHeaderGroup: 1
---- !u!114 &-3161413231188625327
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7184341214914632179}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e8cb7f065af3427baafdc7001a4582b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::VehicleAttachmentSockets
-  ShowTopMostFoldoutHeaderGroup: 1
-  _roofGunSocket: {fileID: 0}
-  _scoopSocket: {fileID: 0}
 --- !u!1 &7365038603248941921
 GameObject:
   m_ObjectHideFlags: 0
@@ -532,7 +485,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f6c483d2f85834989a43636219d73b13, type: 2}
+  - {fileID: 2100000, guid: 6c16c58239b2640ebb195bedb475b187, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
