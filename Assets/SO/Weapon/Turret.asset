@@ -19,7 +19,7 @@ MonoBehaviour:
   IsFrontScoop: 0
   Damage: 30
   FireRate: 8
-  ProjectilePrefab: {fileID: 0}
+  ProjectilePrefab: {fileID: 1066879868662873631, guid: bbf2d4321af06438eafd513455028bee, type: 3}
   BonusDamage: 0
   SpeedFactor: 0
   CollisionCooldown: 0.4

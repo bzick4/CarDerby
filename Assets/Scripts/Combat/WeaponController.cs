@@ -6,88 +6,179 @@ using CarDerby.SO;
 namespace CarDerby.Combat
 {
     /// <summary>
-    /// Abstract weapon — обычный MonoBehaviour (не NetworkBehaviour).
+    /// Базовый класс оружия — обычный MonoBehaviour (не NetworkBehaviour).
     ///
-    /// NGO не поддерживает вложенные NetworkObject в динамических префабах,
-    /// поэтому NetworkObject должен быть только на корневом объекте машины.
-    /// WeaponController работает на стороне владельца (owner); RPCs для спавна
-    /// снарядов идут через корневой NetworkObject машины.
+    /// Архитектура:
+    ///   • Владелец вызывает Fire() и AimAt() каждый кадр через PlayerInputHandler.
+    ///   • Fire() рассчитывает позицию дула и роутит запрос на сервер через CarController.FireProjectileServerRpc.
+    ///   • Сервер спавнит NetworkObject-снаряд.
+    ///   • Не-владельцы в LateUpdate применяют _netWeaponYaw из CarController для анимации поворота.
+    ///
+    /// Настройка в префабе оружия:
+    ///   _weaponMount   — Transform, который вращается к цели (обычно корень префаба оружия).
+    ///   _muzzlePoints  — точки вылета снаряда. Если пусто — авто-поиск дочерних "MuzzlePoint*".
+    ///                    Если не нашёл — использует корень самого оружия.
     /// </summary>
     public abstract class WeaponController : MonoBehaviour, IWeapon
     {
         [SerializeField] protected WeaponDataSO _weaponData;
-        [SerializeField] protected Transform    _weaponMount;   // вращается к курсору
-        [SerializeField] protected Transform    _muzzlePoint;   // точка вылета снаряда
+        [SerializeField] protected Transform    _weaponMount;  // вращается к цели
+        [SerializeField] protected Transform[]  _muzzlePoints; // точки стрельбы
 
-        // Корневой NetworkObject машины — находится автоматически при старте
-        private NetworkObject _rootNetObj;
+        // Кэш компонентов с корня машины
+        private NetworkObject              _rootNetObj;
+        private CarDerby.Car.CarController _carController;
 
-        private float _lastFireTime;
+        protected float _lastFireTime;
+        private int   _muzzleIndex;      // для round-robin (MachineGun)
 
         // ── Свойства ─────────────────────────────────────────────────────────
 
-        public float Damage   => _weaponData != null ? _weaponData.Damage  : 0f;
-        public float FireRate => _weaponData != null ? _weaponData.FireRate : 1f;
-        public bool  CanFire  => Time.time - _lastFireTime >= 1f / FireRate;
+        public WeaponDataSO WeaponData => _weaponData;
 
-        /// <summary>true только на машине локального игрока.</summary>
-        protected bool IsOwner => _rootNetObj != null && _rootNetObj.IsOwner;
+        public float Damage   => _weaponData != null ? _weaponData.Damage   : 0f;
+        public float FireRate => _weaponData != null ? _weaponData.FireRate  : 1f;
 
-        /// <summary>ClientId владельца машины.</summary>
+        /// <summary>Можно ли выстрелить прямо сейчас (кулдаун по FireRate).</summary>
+        public virtual bool CanFire => Time.time - _lastFireTime >= 1f / Mathf.Max(0.01f, FireRate);
+
+        protected bool  IsOwner       => _rootNetObj != null && _rootNetObj.IsOwner;
+        protected bool  IsServer      => NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer;
         protected ulong OwnerClientId => _rootNetObj != null ? _rootNetObj.OwnerClientId : 0;
 
-        /// <summary>true только на сервере/хосте.</summary>
-        protected bool IsServer => _rootNetObj != null && _rootNetObj.IsOwnedByServer
-                                   || (NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer);
+        // ── IWeapon ──────────────────────────────────────────────────────────
+
+        public void SetWeaponData(WeaponDataSO data) => _weaponData = data;
+
+        public void AimAt(Vector3 worldPoint)
+        {
+            if (!IsOwner || _weaponMount == null) return;
+            Vector3 dir = worldPoint - _weaponMount.position;
+            dir.y = 0f;
+            if (dir.sqrMagnitude > 0.001f)
+                _weaponMount.rotation = Quaternion.LookRotation(dir.normalized);
+        }
+
+        /// <summary>
+        /// Вызывается PlayerInputHandler каждый кадр пока кнопка зажата.
+        /// Базовая реализация: один выстрел с кулдауном по FireRate.
+        /// </summary>
+        public virtual void Fire()
+        {
+            if (!IsOwner || !CanFire) return;
+            _lastFireTime = Time.time;
+
+            Transform muzzle = GetNextMuzzle();
+            PlayMuzzleEffect(muzzle);
+            RequestFire(muzzle);
+        }
 
         // ── Lifecycle ────────────────────────────────────────────────────────
 
         protected virtual void Awake()
         {
-            // Ищем NetworkObject на корневом объекте иерархии машины
-            _rootNetObj = GetComponentInParent<NetworkObject>();
+            _rootNetObj    = GetComponentInParent<NetworkObject>();
+            _carController = GetComponentInParent<CarDerby.Car.CarController>();
+
+            if (_muzzlePoints == null || _muzzlePoints.Length == 0)
+                AutoFindMuzzlePoints();
         }
 
         /// <summary>
-        /// Вызывается PlayerSpawner сразу после спавна машины —
-        /// подставляет нужный SO на основе выбора игрока в лобби.
+        /// Синхронизация поворота у не-владельцев через NetworkVariable.
+        /// Вызывается каждый LateUpdate на всех клиентах кроме владельца.
         /// </summary>
-        public void SetWeaponData(WeaponDataSO data) => _weaponData = data;
-
-        // ── IWeapon ──────────────────────────────────────────────────────────
-
-        public void AimAt(Vector3 worldPoint)
+        protected virtual void LateUpdate()
         {
-            if (!IsOwner) return;
+            if (IsOwner) return;
+            if (_weaponMount == null || _carController == null) return;
+            _weaponMount.rotation = Quaternion.Euler(0f, _carController.WeaponYaw, 0f);
+        }
 
-            if (_weaponMount != null)
+        // ── Muzzle management ────────────────────────────────────────────────
+
+        /// <summary>Round-robin по всем muzzle-точкам. Переопредели для random (RocketLauncher).</summary>
+        protected virtual Transform GetNextMuzzle()
+        {
+            if (_muzzlePoints == null || _muzzlePoints.Length == 0) return transform;
+            var m = _muzzlePoints[_muzzleIndex % _muzzlePoints.Length];
+            _muzzleIndex = (_muzzleIndex + 1) % _muzzlePoints.Length;
+            return m != null ? m : transform;
+        }
+
+        protected Transform GetRandomMuzzle()
+        {
+            if (_muzzlePoints == null || _muzzlePoints.Length == 0) return transform;
+            return _muzzlePoints[Random.Range(0, _muzzlePoints.Length)] ?? transform;
+        }
+
+        private void AutoFindMuzzlePoints()
+        {
+            var found = new System.Collections.Generic.List<Transform>();
+            foreach (Transform child in GetComponentsInChildren<Transform>(includeInactive: true))
             {
-                // Считаем направление от позиции самой башни, а не корня оружия
-                Vector3 pivot = _weaponMount.position;
-                Vector3 dir   = worldPoint - pivot;
-                dir.y = 0f;
-                if (dir.sqrMagnitude > 0.001f)
-                    _weaponMount.rotation = Quaternion.LookRotation(dir.normalized);
+                if (child == transform) continue;
+                if (child.name.StartsWith("MuzzlePoint") ||
+                    child.name.StartsWith("Muzzle"))
+                    found.Add(child);
+            }
+            if (found.Count > 0)
+            {
+                _muzzlePoints = found.ToArray();
+                Debug.Log($"[WeaponController] Auto-found {found.Count} muzzle points на '{gameObject.name}'");
             }
         }
 
-        public void Fire()
-        {
-            if (!IsOwner || !CanFire) return;
+        // ── Fire routing ─────────────────────────────────────────────────────
 
-            _lastFireTime = Time.time;
-            SpawnProjectile();
-            PlayMuzzleEffect();
-        }
-
-        // ── Overrideable ─────────────────────────────────────────────────────
+        /// <summary>Роутит выстрел из Transform дула.</summary>
+        protected void RequestFire(Transform muzzle)
+            => RequestFire(muzzle.position, muzzle.rotation);
 
         /// <summary>
-        /// Спавн снаряда на сервере. Вызывается только у владельца.
-        /// Реализация должна использовать NetworkObject.Spawn() для синхронизации.
+        /// Роутит выстрел: если сервер — спавним прямо, иначе — ServerRpc через CarController.
         /// </summary>
-        protected abstract void SpawnProjectile();
+        protected void RequestFire(Vector3 pos, Quaternion rot)
+        {
+            if (_weaponData == null || _weaponData.ProjectilePrefab == null) return;
 
-        protected virtual void PlayMuzzleEffect() { }
+            if (IsServer)
+            {
+                DoServerSpawn(pos, rot);
+            }
+            else
+            {
+                _carController?.FireProjectileServerRpc(
+                    pos, rot,
+                    Damage,
+                    _weaponData.ProjectileSpeed,
+                    _weaponData.ProjectileLifetime,
+                    _weaponData.ExplosionRadius);
+            }
+        }
+
+        /// <summary>Server-only: создаёт и спавнит снаряд.</summary>
+        public void DoServerSpawn(Vector3 pos, Quaternion rot)
+        {
+            if (_weaponData?.ProjectilePrefab == null) return;
+
+            var obj    = Instantiate(_weaponData.ProjectilePrefab, pos, rot);
+            var netObj = obj.GetComponent<NetworkObject>();
+            if (netObj == null) { Destroy(obj); return; }
+
+            // Initialize ДО Spawn — OnNetworkSpawn увидит правильные значения скорости
+            var proj = obj.GetComponent<ProjectileBase>();
+            proj?.Initialize(OwnerClientId, Damage,
+                             _weaponData.ProjectileSpeed,
+                             _weaponData.ProjectileLifetime,
+                             _weaponData.ExplosionRadius);
+
+            netObj.SpawnWithOwnership(OwnerClientId, destroyWithScene: true);
+        }
+
+        // ── Overridable ──────────────────────────────────────────────────────
+
+        /// <summary>Визуальный эффект выстрела (вспышка, звук). Запускается у владельца.</summary>
+        protected virtual void PlayMuzzleEffect(Transform muzzle) { }
     }
 }

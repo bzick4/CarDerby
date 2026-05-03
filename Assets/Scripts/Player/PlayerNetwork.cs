@@ -22,7 +22,6 @@ namespace CarDerby.Player
     public class PlayerNetwork : NetworkBehaviour
     {
         [SerializeField] private Car.CarController          _carController;
-        [SerializeField] private Car.CarPhysics             _carPhysics;
         [SerializeField] private Combat.WeaponController    _weaponController;
         [SerializeField] private Health.HealthSystem        _healthSystem;
         [SerializeField] private PlayerInputHandler         _inputHandler;
@@ -38,6 +37,12 @@ namespace CarDerby.Player
         public static event Action<ulong, ulong> AnyPlayerDied; // (victimId, killerId)
 
         public ulong PlayerId => OwnerClientId;
+
+        /// <summary>Вызывается PlayerSpawner после динамического спавна оружия.</summary>
+        public void SetWeaponController(Combat.WeaponController controller)
+        {
+            _weaponController = controller;
+        }
 
         // ── Lifecycle ────────────────────────────────────────────────────────
 
@@ -92,8 +97,8 @@ namespace CarDerby.Player
             else
                 Debug.LogWarning("[PlayerNetwork] SceneCamera не найдена в сцене.");
 
-            if (hud != null && _carPhysics != null)
-                hud.Bind(_carPhysics, _healthSystem);
+            if (hud != null && _carController != null)
+                hud.Bind(_carController, _healthSystem);
             else if (hud == null)
                 Debug.LogWarning("[PlayerNetwork] GameHUD не найден в сцене.");
         }

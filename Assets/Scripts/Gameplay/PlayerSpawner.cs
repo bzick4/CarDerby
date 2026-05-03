@@ -2,6 +2,7 @@
 using UnityEngine;
 using Unity.Netcode;
 using CarDerby.SO;
+using CarDerby.Car;
 using CarDerby.Combat;
 
 namespace CarDerby.Gameplay
@@ -108,7 +109,7 @@ namespace CarDerby.Gameplay
             if (rb != null) rb.mass = data.MassKg;
 
             // CarPhysics — скорость, крутящий момент и т.д.
-            var physics = car.GetComponent<Car.CarPhysics>();
+            var physics = car.GetComponent<CarPhysics>();
             if (physics != null) physics.Initialize(data);
 
             // HealthSystem — HP из SO
@@ -120,24 +121,104 @@ namespace CarDerby.Gameplay
 
         private void InjectWeaponData(GameObject carInstance, int weaponIndex)
         {
-            if (_weaponRoster == null || _weaponRoster.Length == 0) return;
+            Debug.Log($"[PlayerSpawner] InjectWeaponData: weaponIndex={weaponIndex}, rosterLen={_weaponRoster?.Length ?? -1}, car='{carInstance.name}'");
+
+            if (_weaponRoster == null || _weaponRoster.Length == 0)
+            {
+                Debug.LogWarning("[PlayerSpawner] _weaponRoster пустой — назначь WeaponDataSO в Inspector.");
+                return;
+            }
 
             int idx  = Mathf.Clamp(weaponIndex, 0, _weaponRoster.Length - 1);
             var data = _weaponRoster[idx];
-            if (data == null || data.WeaponPrefab == null) return;
+            if (data == null) { Debug.LogWarning($"[PlayerSpawner] WeaponDataSO[{idx}] = null"); return; }
+            if (data.WeaponPrefab == null) { Debug.LogWarning($"[PlayerSpawner] '{data.name}'.WeaponPrefab не назначен в SO."); return; }
 
-            // Ищем точку крепления на этой машине, если нет — вешаем на корень
-            var slot  = carInstance.GetComponentInChildren<Car.CarWeaponSlot>();
-            Transform mount = slot != null ? slot.transform : carInstance.transform;
+            // Ищем точку крепления: CarWeaponSlot компонент или дочерний объект с именем "WeaponSlot"
+            Transform mount = FindWeaponMount(carInstance.transform);
+            Debug.Log($"[PlayerSpawner] Weapon mount: '{mount.name}'");
 
+            // Спавним оружие на сервере
+            var weaponController = SpawnWeapon(mount, data);
+
+            // Регистрируем WeaponController в PlayerNetwork и PlayerInputHandler
+            if (weaponController != null)
+                WireWeaponController(carInstance, weaponController);
+
+            // Говорим всем клиентам тоже заспавнить оружие
+            var netObj = carInstance.GetComponent<NetworkObject>();
+            if (netObj != null)
+                SpawnWeaponClientRpc(netObj.NetworkObjectId, idx);
+        }
+
+        /// <summary>Ищет точку крепления оружия: сначала по компоненту CarWeaponSlot, потом по имени "WeaponSlot".</summary>
+        private Transform FindWeaponMount(Transform root)
+        {
+            // По компоненту
+            var slot = root.GetComponentInChildren<CarWeaponSlot>();
+            if (slot != null) return slot.transform;
+
+            // По имени дочернего объекта
+            var byName = root.Find("WeaponSlot");
+            if (byName != null) return byName;
+
+            // Рекурсивный поиск по имени
+            foreach (Transform child in root.GetComponentsInChildren<Transform>())
+            {
+                if (child.name == "WeaponSlot") return child;
+            }
+
+            Debug.LogWarning($"[PlayerSpawner] WeaponSlot не найден на '{root.name}' — оружие крепится к корню.");
+            return root;
+        }
+
+        private WeaponController SpawnWeapon(Transform mount, WeaponDataSO data)
+        {
             var weaponObj = Instantiate(data.WeaponPrefab, mount);
             weaponObj.transform.localPosition = Vector3.zero;
-            // localRotation не трогаем — берём из префаба оружия
-
-            // Если в префабе оружия есть WeaponController — подставляем SO со статами
+            weaponObj.transform.localRotation = Quaternion.identity;
             var controller = weaponObj.GetComponent<WeaponController>();
-            if (controller != null)
-                controller.SetWeaponData(data);
+            if (controller != null) controller.SetWeaponData(data);
+            Debug.Log($"[PlayerSpawner] SpawnWeapon: '{data.WeaponPrefab.name}' → '{mount.name}', controller={controller != null}");
+            return controller;
+        }
+
+        /// <summary>Прокидывает WeaponController в PlayerNetwork и PlayerInputHandler на корне машины.</summary>
+        private void WireWeaponController(GameObject carRoot, WeaponController weaponController)
+        {
+            // PlayerInputHandler уже ищет GetComponentInChildren лениво в Update,
+            // поэтому принудительно ставим через reflection-safe публичный метод или SerializedField
+            var inputHandler = carRoot.GetComponent<Player.PlayerInputHandler>();
+            if (inputHandler != null)
+                inputHandler.SetWeaponController(weaponController);
+
+            var playerNetwork = carRoot.GetComponent<Player.PlayerNetwork>();
+            if (playerNetwork != null)
+                playerNetwork.SetWeaponController(weaponController);
+        }
+
+        [ClientRpc]
+        private void SpawnWeaponClientRpc(ulong carNetworkObjectId, int weaponIndex)
+        {
+            // На сервере уже заспавнили — пропускаем
+            if (IsServer) return;
+
+            if (_weaponRoster == null || weaponIndex >= _weaponRoster.Length) return;
+            var data = _weaponRoster[weaponIndex];
+            if (data == null || data.WeaponPrefab == null) return;
+
+            // Находим машину по NetworkObjectId
+            if (!NetworkManager.Singleton.SpawnManager.SpawnedObjects
+                    .TryGetValue(carNetworkObjectId, out var netObj)) return;
+
+            Debug.Log($"[PlayerSpawner] ClientRpc: spawning '{data.WeaponPrefab.name}' on '{netObj.name}'");
+
+            Transform mount = FindWeaponMount(netObj.transform);
+            var weaponController = SpawnWeapon(mount, data);
+
+            // Прокидываем на клиенте тоже
+            if (weaponController != null)
+                WireWeaponController(netObj.gameObject, weaponController);
         }
 
         // ── Helpers ──────────────────────────────────────────────────────────

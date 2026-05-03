@@ -21,9 +21,15 @@ namespace CarDerby.Player
             // WeaponController не ищем здесь — оружие спавнится позже Awake
         }
 
+        /// <summary>Вызывается PlayerSpawner после спавна оружия.</summary>
+        public void SetWeaponController(Combat.WeaponController controller)
+        {
+            _weaponController = controller;
+        }
+
         private void Update()
         {
-            // Оружие появляется после спавна машины — подхватываем лениво
+            // Lazy fallback: подхватываем если ещё не установлен через SetWeaponController
             if (_weaponController == null)
                 _weaponController = GetComponentInChildren<Combat.WeaponController>();
 
@@ -39,22 +45,29 @@ namespace CarDerby.Player
             bool  drifting = kb.leftCtrlKey.isPressed;
             bool  firing   = mouse.leftButton.isPressed;
 
-            if (_carController != null)
-                _carController.SubmitInputServerRpc(throttle, steering, braking, nitro, drifting);
-
             // ── Прицеливание — горизонтальное направление камеры, точка далеко впереди
             var cam = Camera.main;
-            if (_weaponController != null && cam != null)
+            float weaponYaw = 0f;
+
+            if (cam != null)
             {
                 Vector3 flatForward = cam.transform.forward;
                 flatForward.y = 0f;
                 if (flatForward.sqrMagnitude > 0.001f)
                 {
                     flatForward.Normalize();
-                    Vector3 aimPoint = transform.position + flatForward * 100f;
-                    _weaponController.AimAt(aimPoint);
+                    weaponYaw = Quaternion.LookRotation(flatForward).eulerAngles.y;
+
+                    if (_weaponController != null)
+                    {
+                        Vector3 aimPoint = transform.position + flatForward * 100f;
+                        _weaponController.AimAt(aimPoint);
+                    }
                 }
             }
+
+            if (_carController != null)
+                _carController.SubmitInputServerRpc(throttle, steering, braking, nitro, drifting, weaponYaw);
 
             if (firing && _weaponController != null)
                 _weaponController.Fire();

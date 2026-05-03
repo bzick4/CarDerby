@@ -880,7 +880,6 @@ GameObject:
   - component: {fileID: -467736554044491028}
   - component: {fileID: 2044471570583316710}
   - component: {fileID: -3707506355375173332}
-  - component: {fileID: 8175403808363024097}
   - component: {fileID: 4044154911857877769}
   - component: {fileID: 9124414942350236600}
   - component: {fileID: 5373872799803755377}
@@ -888,7 +887,7 @@ GameObject:
   - component: {fileID: 3550270991635978939}
   - component: {fileID: 4037177265153440750}
   - component: {fileID: 776873993639547830}
-  - component: {fileID: -7545428575415813051}
+  - component: {fileID: -621187488721032558}
   m_Layer: 0
   m_Name: Sport
   m_TagString: Untagged
@@ -1048,52 +1047,6 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!114 &8175403808363024097
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8672942426941980960}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkTransform
-  ShowTopMostFoldoutHeaderGroup: 1
-  NetworkTransformExpanded: 0
-  AutoOwnerAuthorityTickOffset: 1
-  PositionInterpolationType: 1
-  RotationInterpolationType: 0
-  ScaleInterpolationType: 0
-  PositionLerpSmoothing: 1
-  PositionMaxInterpolationTime: 0.1
-  RotationLerpSmoothing: 1
-  RotationMaxInterpolationTime: 0.1
-  ScaleLerpSmoothing: 1
-  ScaleMaxInterpolationTime: 0.1
-  AuthorityMode: 0
-  TickSyncChildren: 0
-  UseUnreliableDeltas: 0
-  SyncPositionX: 0
-  SyncPositionY: 1
-  SyncPositionZ: 0
-  SyncRotAngleX: 1
-  SyncRotAngleY: 0
-  SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
-  PositionThreshold: 0.001
-  RotAngleThreshold: 0.01
-  ScaleThreshold: 0.01
-  UseQuaternionSynchronization: 0
-  UseQuaternionCompression: 0
-  UseHalfFloatPrecision: 0
-  InLocalSpace: 0
-  SwitchTransformSpaceWhenParented: 0
-  Interpolate: 1
-  SlerpPosition: 0
 --- !u!114 &4044154911857877769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1166,7 +1119,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Player.PlayerNetwork
   ShowTopMostFoldoutHeaderGroup: 1
   _carController: {fileID: 9124414942350236600}
-  _carPhysics: {fileID: 4044154911857877769}
   _weaponController: {fileID: 0}
   _healthSystem: {fileID: 4037177265153440750}
   _inputHandler: {fileID: 776873993639547830}
@@ -1214,7 +1166,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Player.PlayerInputHandler
   _carController: {fileID: 9124414942350236600}
   _weaponController: {fileID: 0}
---- !u!114 &-7545428575415813051
+--- !u!114 &-621187488721032558
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1223,11 +1175,40 @@ MonoBehaviour:
   m_GameObject: {fileID: 8672942426941980960}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
+  m_Script: {fileID: 11500000, guid: 2ade6837dffeb40cf957400372aa7467, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkRigidbody
+  m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Car.ServerAuthNetworkTransform
   ShowTopMostFoldoutHeaderGroup: 1
-  NetworkRigidbodyBaseExpanded: 0
-  UseRigidBodyForMotion: 1
-  AutoUpdateKinematicState: 1
-  AutoSetKinematicOnDespawn: 1
+  NetworkTransformExpanded: 0
+  AutoOwnerAuthorityTickOffset: 1
+  PositionInterpolationType: 0
+  RotationInterpolationType: 0
+  ScaleInterpolationType: 0
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
+  RotationLerpSmoothing: 1
+  RotationMaxInterpolationTime: 0.1
+  ScaleLerpSmoothing: 1
+  ScaleMaxInterpolationTime: 0.1
+  AuthorityMode: 0
+  TickSyncChildren: 0
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  SwitchTransformSpaceWhenParented: 0
+  Interpolate: 1
+  SlerpPosition: 0

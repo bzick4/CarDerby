@@ -2,7 +2,6 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
-using CarDerby.Car;
 using CarDerby.Health;
 
 namespace CarDerby.UI
@@ -26,8 +25,8 @@ namespace CarDerby.UI
         // World-space enemy bars overlay
         private VisualElement _wsOverlay;
 
-        private CarPhysics   _carPhysics;
-        private HealthSystem _healthSystem;
+        private Car.CarController _carController;
+        private HealthSystem      _healthSystem;
 
         private void Awake()
         {
@@ -70,10 +69,10 @@ namespace CarDerby.UI
         /// <summary>
         /// Вызывается из PlayerNetwork.OnNetworkSpawn для локального игрока.
         /// </summary>
-        public void Bind(CarPhysics physics, HealthSystem health)
+        public void Bind(Car.CarController controller, HealthSystem health)
         {
-            _carPhysics   = physics;
-            _healthSystem = health;
+            _carController = controller;
+            _healthSystem  = health;
 
             if (_healthSystem != null)
             {
@@ -98,8 +97,8 @@ namespace CarDerby.UI
 
         private void Update()
         {
-            if (_speedValue == null || _carPhysics == null) return;
-            _speedValue.text = Mathf.RoundToInt(_carPhysics.CurrentSpeedKmh * 2f).ToString();
+            if (_speedValue == null || _carController == null) return;
+            _speedValue.text = Mathf.RoundToInt(_carController.SpeedKmh * 2f).ToString();
         }
 
         private void OnHealthChanged(float current, float max)

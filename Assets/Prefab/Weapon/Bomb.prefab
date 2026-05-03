@@ -205,7 +205,7 @@ Transform:
   m_GameObject: {fileID: 7054538230857857137}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.037, y: 0.793, z: 1.24}
+  m_LocalPosition: {x: -0.037, y: 0.793, z: 1.31}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -220,7 +220,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5526907380058342781}
-  - component: {fileID: -7818194017874481511}
+  - component: {fileID: -1814427512454712214}
   m_Layer: 0
   m_Name: Bomb
   m_TagString: Untagged
@@ -246,7 +246,7 @@ Transform:
   - {fileID: 8429166985493288331}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-7818194017874481511
+--- !u!114 &-1814427512454712214
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -255,11 +255,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 8789386096971707235}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c30ff3b6e407648c7886e023a7354fd0, type: 3}
+  m_Script: {fileID: 11500000, guid: 2b6e7138fcbc941bda76472eeb85d40b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Combat.MachineGun
+  m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Combat.BombLauncher
   _weaponData: {fileID: 11400000, guid: be7ef832fbb1341c6a1d78577f06d63f, type: 2}
   _weaponMount: {fileID: 5526907380058342781}
-  _muzzlePoint: {fileID: 8429166985493288331}
-  _muzzleFlash: {fileID: 0}
-  _fireAudio: {fileID: 0}
+  _muzzlePoints:
+  - {fileID: 8429166985493288331}
+  _launchAngle: 30
+  _launchEffect: {fileID: 0}
+  _launchAudio: {fileID: 0}

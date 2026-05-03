@@ -40,6 +40,7 @@ namespace CarDerby.Car
 
         // CurrentSpeed в км/ч для UI
         public float CurrentSpeedKmh => _rb != null ? _rb.linearVelocity.magnitude * 3.6f : 0f;
+        public float MaxSteerAngle   => _settings.MaxSteerAngle;
         public float MaxSpeedKmh     { get; private set; } = 120f;
 
         private float MaxSpeedMs => MaxSpeedKmh / 3.6f;
@@ -68,13 +69,47 @@ namespace CarDerby.Car
             _rb.centerOfMass = new Vector3(0f, -0.35f, 0f);
         }
 
+        // Накопленный угол вращения колеса (градусы) — для анимации на клиенте
+        private float _wheelRotationAngle;
+
         private void Update()
         {
-            // Обновляем позицию и поворот мешей колёс каждый кадр
-            UpdateWheelMesh(_frontLeft,  _meshFrontLeft);
-            UpdateWheelMesh(_frontRight, _meshFrontRight);
-            UpdateWheelMesh(_rearLeft,   _meshRearLeft);
-            UpdateWheelMesh(_rearRight,  _meshRearRight);
+            if (_frontLeft != null && _frontLeft.enabled)
+            {
+                // Сервер: берём позу из WheelCollider (учитывает подвеску)
+                UpdateWheelMesh(_frontLeft,  _meshFrontLeft);
+                UpdateWheelMesh(_frontRight, _meshFrontRight);
+                UpdateWheelMesh(_rearLeft,   _meshRearLeft);
+                UpdateWheelMesh(_rearRight,  _meshRearRight);
+            }
+            else
+            {
+                // Клиент: анимируем меши вручную по NetworkVariable данным
+                UpdateWheelMeshesClient();
+            }
+        }
+
+        /// <summary>Вызывается на клиенте — анимирует колёса без WheelCollider.</summary>
+        public void UpdateWheelMeshesClient(float steerAngle = 0f, float speedKmh = 0f)
+        {
+            // Вращение колёс по скорости
+            float wheelRadius  = (_frontLeft != null) ? _frontLeft.radius : 0.35f;
+            float speedMs      = speedKmh / 3.6f;
+            float degreesPerSec = (speedMs / (2f * Mathf.PI * wheelRadius)) * 360f;
+            _wheelRotationAngle += degreesPerSec * Time.deltaTime;
+
+            // Передние колёса — поворот руля + вращение
+            ApplyWheelTransform(_meshFrontLeft,  steerAngle,  _wheelRotationAngle);
+            ApplyWheelTransform(_meshFrontRight, steerAngle,  _wheelRotationAngle);
+            // Задние колёса — только вращение
+            ApplyWheelTransform(_meshRearLeft,   0f,          _wheelRotationAngle);
+            ApplyWheelTransform(_meshRearRight,  0f,          _wheelRotationAngle);
+        }
+
+        private void ApplyWheelTransform(Transform mesh, float steerAngle, float rotAngle)
+        {
+            if (mesh == null) return;
+            mesh.localRotation = Quaternion.Euler(rotAngle, steerAngle, 0f);
         }
 
         // ── Управление ───────────────────────────────────────────────────────
@@ -146,7 +181,8 @@ namespace CarDerby.Car
 
         private void UpdateWheelMesh(WheelCollider collider, Transform mesh)
         {
-            if (collider == null || mesh == null) return;
+            // На клиенте WheelCollider отключён — GetWorldPose вернёт мусор, пропускаем
+            if (collider == null || mesh == null || !collider.enabled) return;
             collider.GetWorldPose(out Vector3 pos, out Quaternion rot);
             mesh.SetPositionAndRotation(pos, rot);
         }
