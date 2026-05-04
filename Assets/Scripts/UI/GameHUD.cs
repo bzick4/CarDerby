@@ -6,23 +6,15 @@ using CarDerby.Health;
 
 namespace CarDerby.UI
 {
-    /// <summary>
-    /// HUD игровой сцены — скорость и HP локального игрока.
-    /// Прикрепи к GameObject с UIDocument (HUD.uxml).
-    /// PlayerNetwork.OnNetworkSpawn вызывает Bind() для локального игрока.
-    /// </summary>
     public class GameHUD : MonoBehaviour
     {
         public static GameHUD Instance { get; private set; }
 
-        // Speed
         private Label _speedValue;
 
-        // Health
         private VisualElement _healthFill;
         private Label         _healthValue;
 
-        // World-space enemy bars overlay
         private VisualElement _wsOverlay;
 
         private Car.CarController _carController;
@@ -49,10 +41,6 @@ namespace CarDerby.UI
             _wsOverlay   = root.Q<VisualElement>("ws-overlay");
         }
 
-        /// <summary>
-        /// Создаёт полоску HP врага в ws-overlay.
-        /// Вызывается WorldSpaceHealthBar для каждого чужого игрока.
-        /// </summary>
         public VisualElement RegisterEnemyBar(out VisualElement fill)
         {
             var bar = new VisualElement();
@@ -66,9 +54,6 @@ namespace CarDerby.UI
             return bar;
         }
 
-        /// <summary>
-        /// Вызывается из PlayerNetwork.OnNetworkSpawn для локального игрока.
-        /// </summary>
         public void Bind(Car.CarController controller, HealthSystem health)
         {
             _carController = controller;
@@ -77,7 +62,6 @@ namespace CarDerby.UI
             if (_healthSystem != null)
             {
                 _healthSystem.OnHealthChanged += OnHealthChanged;
-                // Ждём кадр — NetworkVariable может ещё не синхронизироваться
                 StartCoroutine(RefreshHealthNextFrame());
             }
         }
@@ -114,7 +98,6 @@ namespace CarDerby.UI
                 float pct = current / max;
                 _healthFill.style.width = Length.Percent(pct * 100f);
 
-                // Цвет: зелёный → жёлтый → красный
                 _healthFill.style.backgroundColor = pct > 0.5f
                     ? Color.Lerp(new Color(1f, 0.75f, 0f), new Color(0.2f, 0.78f, 0.27f), (pct - 0.5f) * 2f)
                     : Color.Lerp(new Color(0.78f, 0.1f, 0.1f), new Color(1f, 0.75f, 0f), pct * 2f);

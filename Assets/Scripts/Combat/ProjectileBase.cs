@@ -39,10 +39,19 @@ namespace CarDerby.Combat
             Rb = GetComponent<Rigidbody>();
             _spawnTime = Time.time;
 
-            if (!IsServer) return;
-
+            // Gravity и velocity применяем НА ВСЕХ клиентах — визуально пуля летит у всех.
+            // Физика клиента независима от сервера, но за 1-2 секунды жизни снаряда
+            // расхождение незаметно. Урон считается только на сервере.
             ConfigureRigidbody(Rb);
-            Rb.linearVelocity = transform.forward * _speed;
+            Launch();
+        }
+
+        /// <summary>Применяет начальную скорость. Вызывается из OnNetworkSpawn и как резерв из Start.</summary>
+        private void Launch()
+        {
+            if (Rb == null) return;
+            Rb.isKinematic      = false;
+            Rb.linearVelocity   = transform.forward * _speed;
         }
 
         /// <summary>Настройка физики — переопредели в подклассе (напр. включить гравитацию).</summary>

@@ -29,8 +29,9 @@ namespace CarDerby.Combat
         private NetworkObject              _rootNetObj;
         private CarDerby.Car.CarController _carController;
 
-        protected float _lastFireTime;
-        private int   _muzzleIndex;      // для round-robin (MachineGun)
+        protected float   _lastFireTime;
+        protected Vector3 _aimPoint;
+        private int       _muzzleIndex;
 
         // ── Свойства ─────────────────────────────────────────────────────────
 
@@ -52,6 +53,7 @@ namespace CarDerby.Combat
 
         public void AimAt(Vector3 worldPoint)
         {
+            _aimPoint = worldPoint;
             if (!IsOwner || _weaponMount == null) return;
             Vector3 dir = worldPoint - _weaponMount.position;
             dir.y = 0f;
@@ -131,9 +133,15 @@ namespace CarDerby.Combat
 
         // ── Fire routing ─────────────────────────────────────────────────────
 
-        /// <summary>Роутит выстрел из Transform дула.</summary>
+        /// <summary>Роутит выстрел из Transform дула к точке прицела (3D, учитывает высоту дула).</summary>
         protected void RequestFire(Transform muzzle)
-            => RequestFire(muzzle.position, muzzle.rotation);
+        {
+            Vector3 toTarget = _aimPoint - muzzle.position;
+            Quaternion rot = toTarget.sqrMagnitude > 0.01f
+                ? Quaternion.LookRotation(toTarget.normalized)
+                : muzzle.rotation;
+            RequestFire(muzzle.position, rot);
+        }
 
         /// <summary>
         /// Роутит выстрел: если сервер — спавним прямо, иначе — ServerRpc через CarController.

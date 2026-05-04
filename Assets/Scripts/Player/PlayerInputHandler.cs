@@ -4,24 +4,18 @@ using UnityEngine.InputSystem;
 
 namespace CarDerby.Player
 {
-    /// <summary>
-    /// Reads input via the new Input System and forwards it to server-authoritative systems.
-    /// Disabled automatically on non-owner NetworkBehaviours by PlayerNetwork.OnNetworkSpawn.
-    /// </summary>
     public class PlayerInputHandler : MonoBehaviour
     {
         [SerializeField] private Car.CarController       _carController;
         [SerializeField] private Combat.WeaponController _weaponController;
 
-        private static readonly int _groundMask = ~0;
+        [SerializeField] private LayerMask _aimMask = ~0;
 
         private void Awake()
         {
             if (_carController == null) _carController = GetComponentInChildren<Car.CarController>();
-            // WeaponController не ищем здесь — оружие спавнится позже Awake
         }
 
-        /// <summary>Вызывается PlayerSpawner после спавна оружия.</summary>
         public void SetWeaponController(Combat.WeaponController controller)
         {
             _weaponController = controller;
@@ -29,7 +23,6 @@ namespace CarDerby.Player
 
         private void Update()
         {
-            // Lazy fallback: подхватываем если ещё не установлен через SetWeaponController
             if (_weaponController == null)
                 _weaponController = GetComponentInChildren<Combat.WeaponController>();
 
@@ -37,7 +30,6 @@ namespace CarDerby.Player
             var mouse = Mouse.current;
             if (kb == null || mouse == null) return;
 
-            // ── Движение ─────────────────────────────────────────────────────
             float throttle = (kb.wKey.isPressed ? 1f : 0f) - (kb.sKey.isPressed ? 1f : 0f);
             float steering = (kb.dKey.isPressed ? 1f : 0f) - (kb.aKey.isPressed ? 1f : 0f);
             bool  braking  = kb.spaceKey.isPressed;
@@ -45,25 +37,20 @@ namespace CarDerby.Player
             bool  drifting = kb.leftCtrlKey.isPressed;
             bool  firing   = mouse.leftButton.isPressed;
 
-            // ── Прицеливание — горизонтальное направление камеры, точка далеко впереди
             var cam = Camera.main;
             float weaponYaw = 0f;
 
             if (cam != null)
             {
-                Vector3 flatForward = cam.transform.forward;
-                flatForward.y = 0f;
-                if (flatForward.sqrMagnitude > 0.001f)
-                {
-                    flatForward.Normalize();
-                    weaponYaw = Quaternion.LookRotation(flatForward).eulerAngles.y;
+                // Рейкаст через текущую позицию курсора-прицела
+                Vector3 aimPoint = GetAimPoint(cam);
 
-                    if (_weaponController != null)
-                    {
-                        Vector3 aimPoint = transform.position + flatForward * 100f;
-                        _weaponController.AimAt(aimPoint);
-                    }
-                }
+                Vector3 flatToAim = aimPoint - transform.position;
+                flatToAim.y = 0f;
+                if (flatToAim.sqrMagnitude > 0.001f)
+                    weaponYaw = Quaternion.LookRotation(flatToAim.normalized).eulerAngles.y;
+
+                _weaponController?.AimAt(aimPoint);
             }
 
             if (_carController != null)
@@ -71,6 +58,27 @@ namespace CarDerby.Player
 
             if (firing && _weaponController != null)
                 _weaponController.Fire();
+        }
+
+        /// <summary>
+        /// Рейкаст из камеры через позицию курсора.
+        /// Собственная машина пропускается, триггеры игнорируются.
+        /// </summary>
+        private Vector3 GetAimPoint(Camera cam)
+        {
+            Vector2 screenPos = Mouse.current.position.ReadValue();
+            Ray     ray       = cam.ScreenPointToRay(screenPos);
+
+            var hits = Physics.RaycastAll(ray, 500f, _aimMask, QueryTriggerInteraction.Ignore);
+            System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+
+            foreach (var hit in hits)
+            {
+                if (hit.transform.IsChildOf(transform)) continue;
+                return hit.point;
+            }
+
+            return ray.GetPoint(300f);
         }
     }
 }

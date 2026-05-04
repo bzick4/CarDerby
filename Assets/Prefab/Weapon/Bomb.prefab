@@ -262,6 +262,6 @@ MonoBehaviour:
   _weaponMount: {fileID: 5526907380058342781}
   _muzzlePoints:
   - {fileID: 8429166985493288331}
-  _launchAngle: 30
+  _launchAngle: 0
   _launchEffect: {fileID: 0}
   _launchAudio: {fileID: 0}

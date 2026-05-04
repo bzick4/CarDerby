@@ -18,11 +18,11 @@ MonoBehaviour:
   WeaponPrefab: {fileID: 8789386096971707235, guid: bd21997583c3a4817b16702b33e6e743, type: 3}
   IsFrontScoop: 0
   Mode: 0
-  Damage: 50
+  Damage: 10
   FireRate: 0.25
   OverheatDuration: 0
   CooldownDuration: 0
-  ProjectilePrefab: {fileID: 4486571362548146129, guid: b5fab3463e91e4bf4931f00cf5ceebb3, type: 3}
+  ProjectilePrefab: {fileID: 4083286475492645724, guid: 3434c5855b17149e385ec66ab1a71b9d, type: 3}
   ProjectileSpeed: 100
   ProjectileLifetime: 4
   ExplosionRadius: 5

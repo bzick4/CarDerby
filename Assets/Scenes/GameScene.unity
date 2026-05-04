@@ -386,6 +386,7 @@ MonoBehaviour:
   _pitch: 20
   _sensitivityX: 3
   _followSmooth: 8
+  _crosshairTexture: {fileID: 2800000, guid: 7d0c426c76f494b7091c5051fcfb186b, type: 3}
 --- !u!1 &404784300
 GameObject:
   m_ObjectHideFlags: 0
@@ -504,7 +505,7 @@ GameObject:
   - component: {fileID: 649571639}
   - component: {fileID: 649571638}
   m_Layer: 0
-  m_Name: ProjectilePools
+  m_Name: ProjectilePools_Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -522,7 +523,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 253d334e7060b4ca4b70c15fe00bcabe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Combat.ProjectilePool
-  _prefab: {fileID: 1066879868662873631, guid: bbf2d4321af06438eafd513455028bee, type: 3}
+  _prefab: {fileID: 2894465903437571785, guid: 320c1e1ebf49c4b86adb6ccdf6059531, type: 3}
   _poolSize: 300
 --- !u!4 &649571639
 Transform:
@@ -550,7 +551,7 @@ GameObject:
   - component: {fileID: 721308178}
   - component: {fileID: 721308177}
   m_Layer: 0
-  m_Name: ProjectilePools (2)
+  m_Name: ProjectilePools_Rocket
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -568,7 +569,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 253d334e7060b4ca4b70c15fe00bcabe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Combat.ProjectilePool
-  _prefab: {fileID: 1066879868662873631, guid: 5c4c4e6aee5d44a24a1696a739710596, type: 3}
+  _prefab: {fileID: 858391413869529772, guid: 23133ea27eb4140eebe9fa32675ade15, type: 3}
   _poolSize: 100
 --- !u!4 &721308178
 Transform:
@@ -627,7 +628,7 @@ GameObject:
   - component: {fileID: 1077108276}
   - component: {fileID: 1077108275}
   m_Layer: 0
-  m_Name: ProjectilePools (1)
+  m_Name: ProjectilePools_Bomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -645,7 +646,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 253d334e7060b4ca4b70c15fe00bcabe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Combat.ProjectilePool
-  _prefab: {fileID: 4486571362548146129, guid: b5fab3463e91e4bf4931f00cf5ceebb3, type: 3}
+  _prefab: {fileID: 4083286475492645724, guid: 3434c5855b17149e385ec66ab1a71b9d, type: 3}
   _poolSize: 80
 --- !u!4 &1077108276
 Transform:
