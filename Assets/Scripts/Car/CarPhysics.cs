@@ -42,6 +42,7 @@ namespace CarDerby.Car
         public float CurrentSpeedKmh => _rb != null ? _rb.linearVelocity.magnitude * 3.6f : 0f;
         public float MaxSteerAngle   => _settings.MaxSteerAngle;
         public float MaxSpeedKmh     { get; private set; } = 120f;
+        private float _baseMaxSpeedKmh = 120f;
 
         private float MaxSpeedMs => MaxSpeedKmh / 3.6f;
 
@@ -60,7 +61,8 @@ namespace CarDerby.Car
             _settings.DownForce     = data.DownForce;
 
             // Скорость
-            MaxSpeedKmh = data.MaxSpeedKmh;
+            _baseMaxSpeedKmh = data.MaxSpeedKmh;
+            MaxSpeedKmh      = data.MaxSpeedKmh;
         }
 
         private void Awake()
@@ -152,6 +154,13 @@ namespace CarDerby.Car
             if (_rearRight != null) _rearRight.motorTorque = 0f;
 
             SetBrakeTorque(_settings.BrakeTorque * strength);
+        }
+
+        /// <summary>Применяет штраф скорости от надетого оружия.</summary>
+        public void SetWeaponSpeedPenalty(float penaltyPercent)
+        {
+            float multiplier = 1f - Mathf.Clamp01(penaltyPercent / 100f);
+            MaxSpeedKmh = _baseMaxSpeedKmh * multiplier;
         }
 
         /// <summary>Вызывается DriftSystem для снижения бокового сцепления.</summary>

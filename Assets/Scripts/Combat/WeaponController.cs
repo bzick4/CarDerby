@@ -49,7 +49,11 @@ namespace CarDerby.Combat
 
         // ── IWeapon ──────────────────────────────────────────────────────────
 
-        public void SetWeaponData(WeaponDataSO data) => _weaponData = data;
+        public void SetWeaponData(WeaponDataSO data)
+        {
+            _weaponData = data;
+            ApplySpeedPenalty();
+        }
 
         public void AimAt(Vector3 worldPoint)
         {
@@ -84,6 +88,16 @@ namespace CarDerby.Combat
 
             if (_muzzlePoints == null || _muzzlePoints.Length == 0)
                 AutoFindMuzzlePoints();
+
+            // Если данные уже назначены в префабе — применяем штраф сразу
+            ApplySpeedPenalty();
+        }
+
+        private void ApplySpeedPenalty()
+        {
+            if (_weaponData == null || _weaponData.SpeedPenaltyPercent <= 0f) return;
+            var carPhysics = GetComponentInParent<CarDerby.Car.CarPhysics>();
+            carPhysics?.SetWeaponSpeedPenalty(_weaponData.SpeedPenaltyPercent);
         }
 
         /// <summary>

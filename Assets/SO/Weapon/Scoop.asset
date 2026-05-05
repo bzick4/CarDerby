@@ -15,11 +15,19 @@ MonoBehaviour:
   WeaponName: Scoop
   Icon: {fileID: 0}
   Description: 
-  WeaponPrefab: {fileID: 3751287056795788329, guid: 444e9e5f6701b4b16be864de873d7d44, type: 3}
+  WeaponPrefab: {fileID: 7578259484052512475, guid: 66eba5bf2a0634384960ec802f52b4e3, type: 3}
   IsFrontScoop: 1
+  Mode: 0
   Damage: 15
   FireRate: 0
+  OverheatDuration: 5
+  CooldownDuration: 2
   ProjectilePrefab: {fileID: 0}
+  ProjectileSpeed: 60
+  ProjectileLifetime: 1.5
+  ExplosionRadius: 0
+  SpeedPenaltyPercent: 20
   BonusDamage: 30
   SpeedFactor: 0.7
-  CollisionCooldown: 0
+  CollisionCooldown: 0.4
+  BonusHealthPercent: 15

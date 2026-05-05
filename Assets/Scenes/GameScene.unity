@@ -387,6 +387,7 @@ MonoBehaviour:
   _sensitivityX: 3
   _followSmooth: 8
   _crosshairTexture: {fileID: 2800000, guid: 7d0c426c76f494b7091c5051fcfb186b, type: 3}
+  _cursorSize: 48
 --- !u!1 &404784300
 GameObject:
   m_ObjectHideFlags: 0
@@ -694,6 +695,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 404784301}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1314285207
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1314285209}
+  - component: {fileID: 1314285208}
+  m_Layer: 0
+  m_Name: ProjectilePools_ShotGun
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1314285208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314285207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 253d334e7060b4ca4b70c15fe00bcabe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Combat.ProjectilePool
+  _prefab: {fileID: 2894465903437571785, guid: 56d51df5396d744e8bc69a50b3bc1b75, type: 3}
+  _poolSize: 100
+--- !u!4 &1314285209
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314285207}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 24.38401, y: -0.00001, z: -14.11516}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1387386900
 GameObject:
   m_ObjectHideFlags: 0
@@ -851,11 +898,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d5b12185421044efc9f544eb22af8355, type: 2}
   _weaponRoster:
   - {fileID: 11400000, guid: be7ef832fbb1341c6a1d78577f06d63f, type: 2}
-  - {fileID: 11400000, guid: ee20a3c0cd6f34953a104111f7c1c3eb, type: 2}
   - {fileID: 11400000, guid: a93fcc5e9d17a4b36bcea11823de6b16, type: 2}
   - {fileID: 11400000, guid: 82a2e7a19462a4aac86e68c5d32f50a7, type: 2}
-  - {fileID: 11400000, guid: f943d87a49d57495da81ad92912f6366, type: 2}
   - {fileID: 11400000, guid: 5f91925526d184ac292b3d29991a7dbc, type: 2}
+  _scoopRoster:
+  - {fileID: 11400000, guid: 1246e2e68ce6048a086d8a7c647689c1, type: 2}
   _spawnPoints:
   - {fileID: 1621650156}
   - {fileID: 1606362695}
@@ -1159,3 +1206,4 @@ SceneRoots:
   - {fileID: 649571639}
   - {fileID: 1077108276}
   - {fileID: 721308178}
+  - {fileID: 1314285209}

@@ -20,6 +20,7 @@ namespace CarDerby.Car
         /// <summary>Speed multiplier applied to CarController when scoop is equipped.</summary>
         public float SpeedFactor => _isEquipped && _weaponData != null ? _weaponData.SpeedFactor : 1f;
 
+        public void SetWeaponData(WeaponDataSO data) { _weaponData = data; }
         public void Equip()   => _isEquipped = true;
         public void Unequip() => _isEquipped = false;
 

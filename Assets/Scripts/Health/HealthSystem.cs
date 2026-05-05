@@ -76,6 +76,15 @@ namespace CarDerby.Health
             _currentHealth.Value = Mathf.Min(_maxHealth.Value, _currentHealth.Value + amount);
         }
 
+        /// <summary>Server-only: increases max health by bonusPercent % and grants that HP immediately.</summary>
+        public void IncreaseMaxHealth(float bonusPercent)
+        {
+            if (!IsServer || bonusPercent <= 0f) return;
+            float bonus = _maxHealth.Value * (bonusPercent / 100f);
+            _maxHealth.Value     += bonus;
+            _currentHealth.Value += bonus;
+        }
+
         // ── Internal ─────────────────────────────────────────────────────────
 
         private void HandleDeathServerSide(ulong killerId)

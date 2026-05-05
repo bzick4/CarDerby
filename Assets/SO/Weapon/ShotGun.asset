@@ -10,16 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2ebf93d04137e4d0988748d2d04eadce, type: 3}
-  m_Name: Turret
+  m_Name: ShotGun
   m_EditorClassIdentifier: Assembly-CSharp::CarDerby.SO.WeaponDataSO
-  WeaponName: Turret
+  WeaponName: ShotGun
   Icon: {fileID: 0}
   Description: 
   WeaponPrefab: {fileID: 6835897075377069744, guid: 994e3a774b9bc40b48f9e0a039bf0cb6, type: 3}
   IsFrontScoop: 0
+  Mode: 0
   Damage: 30
-  FireRate: 8
-  ProjectilePrefab: {fileID: 1066879868662873631, guid: bbf2d4321af06438eafd513455028bee, type: 3}
+  FireRate: 5
+  OverheatDuration: 5
+  CooldownDuration: 2
+  ProjectilePrefab: {fileID: 2894465903437571785, guid: 56d51df5396d744e8bc69a50b3bc1b75, type: 3}
+  ProjectileSpeed: 60
+  ProjectileLifetime: 1.5
+  ExplosionRadius: 0
+  SpeedPenaltyPercent: 0
   BonusDamage: 0
   SpeedFactor: 0
   CollisionCooldown: 0.4

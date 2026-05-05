@@ -21,7 +21,8 @@ namespace CarDerby.Gameplay
     public class PlayerSpawner : NetworkBehaviour
     {
         [SerializeField] private CarDataSO[]    _carRoster    = new CarDataSO[0];
-        [SerializeField] private WeaponDataSO[] _weaponRoster = new WeaponDataSO[0]; // те же SO что в лобби
+        [SerializeField] private WeaponDataSO[] _weaponRoster = new WeaponDataSO[0];
+        [SerializeField] private WeaponDataSO[] _scoopRoster  = new WeaponDataSO[0]; // только ковши (IsFrontScoop = true)
         [SerializeField] private Transform[]    _spawnPoints  = new Transform[0];
 
         // ── NGO lifecycle ────────────────────────────────────────────────────
@@ -92,8 +93,10 @@ namespace CarDerby.Gameplay
 
             netObj.SpawnWithOwnership(clientId);
 
-            // Инжектируем WeaponDataSO выбранный игроком в лобби
+            // Инжектируем оружие и ковш выбранные игроком в лобби
             InjectWeaponData(instance, loadout.WeaponIndex);
+            if (loadout.ScoopIndex >= 0)
+                InjectScoopData(instance, loadout.ScoopIndex);
 
             Debug.Log($"[PlayerSpawner] Spawned '{prefab.name}' for client {clientId} at {spawnPos}");
         }
@@ -119,6 +122,24 @@ namespace CarDerby.Gameplay
 
         // ── Weapon injection ─────────────────────────────────────────────────
 
+        private void InjectScoopData(GameObject carInstance, int scoopIndex)
+        {
+            if (_scoopRoster == null || _scoopRoster.Length == 0)
+            {
+                Debug.LogWarning("[PlayerSpawner] _scoopRoster пустой — назначь WeaponDataSO (ковши) в Inspector.");
+                return;
+            }
+
+            int idx  = Mathf.Clamp(scoopIndex, 0, _scoopRoster.Length - 1);
+            var data = _scoopRoster[idx];
+            if (data == null || data.WeaponPrefab == null) { Debug.LogWarning($"[PlayerSpawner] ScoopRoster[{idx}] пустой или без префаба."); return; }
+
+            SpawnScoopOnCar(carInstance, data);
+
+            var netObj = carInstance.GetComponent<NetworkObject>();
+            if (netObj != null) SpawnScoopClientRpc(netObj.NetworkObjectId, idx);
+        }
+
         private void InjectWeaponData(GameObject carInstance, int weaponIndex)
         {
             Debug.Log($"[PlayerSpawner] InjectWeaponData: weaponIndex={weaponIndex}, rosterLen={_weaponRoster?.Length ?? -1}, car='{carInstance.name}'");
@@ -134,35 +155,67 @@ namespace CarDerby.Gameplay
             if (data == null) { Debug.LogWarning($"[PlayerSpawner] WeaponDataSO[{idx}] = null"); return; }
             if (data.WeaponPrefab == null) { Debug.LogWarning($"[PlayerSpawner] '{data.name}'.WeaponPrefab не назначен в SO."); return; }
 
-            // Ищем точку крепления: CarWeaponSlot компонент или дочерний объект с именем "WeaponSlot"
-            Transform mount = FindWeaponMount(carInstance.transform);
-            Debug.Log($"[PlayerSpawner] Weapon mount: '{mount.name}'");
-
-            // Спавним оружие на сервере
-            var weaponController = SpawnWeapon(mount, data);
-
-            // Регистрируем WeaponController в PlayerNetwork и PlayerInputHandler
-            if (weaponController != null)
-                WireWeaponController(carInstance, weaponController);
-
-            // Говорим всем клиентам тоже заспавнить оружие
             var netObj = carInstance.GetComponent<NetworkObject>();
-            if (netObj != null)
-                SpawnWeaponClientRpc(netObj.NetworkObjectId, idx);
+
+            if (data.IsFrontScoop)
+            {
+                SpawnScoopOnCar(carInstance, data);
+                if (netObj != null) SpawnWeaponClientRpc(netObj.NetworkObjectId, idx);
+            }
+            else
+            {
+                Transform mount = FindWeaponMount(carInstance.transform);
+                Debug.Log($"[PlayerSpawner] Weapon mount: '{mount.name}'");
+                var weaponController = SpawnWeapon(mount, data);
+                if (weaponController != null)
+                    WireWeaponController(carInstance, weaponController);
+                if (netObj != null) SpawnWeaponClientRpc(netObj.NetworkObjectId, idx);
+            }
+        }
+
+        /// <summary>Server-side scoop attachment: mounts prefab, equips ScoopModifier, applies stat bonuses.</summary>
+        private void SpawnScoopOnCar(GameObject carInstance, WeaponDataSO data)
+        {
+            Transform mount = FindScoopMount(carInstance.transform);
+            Debug.Log($"[PlayerSpawner] Scoop mount: '{mount.name}'");
+
+            var scoopObj = Instantiate(data.WeaponPrefab, mount);
+            scoopObj.transform.localPosition = Vector3.zero;
+            scoopObj.transform.localRotation = Quaternion.identity;
+
+            var scoopMod = scoopObj.GetComponent<Car.ScoopModifier>();
+            if (scoopMod == null) scoopMod = scoopObj.AddComponent<Car.ScoopModifier>();
+            scoopMod.SetWeaponData(data);
+            scoopMod.Equip();
+
+            carInstance.GetComponent<Car.CarController>()?.SetScoop(scoopMod);
+
+            // Speed penalty
+            if (data.SpeedPenaltyPercent > 0f)
+                carInstance.GetComponent<Car.CarPhysics>()?.SetWeaponSpeedPenalty(data.SpeedPenaltyPercent);
+
+            // Bonus HP — applied after NetworkSpawn so NetworkVariable is writable
+            if (data.BonusHealthPercent > 0f)
+                carInstance.GetComponent<Health.HealthSystem>()?.IncreaseMaxHealth(data.BonusHealthPercent);
+
+            Debug.Log($"[PlayerSpawner] Scoop '{data.WeaponPrefab.name}' equipped. SpeedPenalty={data.SpeedPenaltyPercent}%, BonusHP={data.BonusHealthPercent}%");
+        }
+
+        /// <summary>Finds the scoop mount via CarScoopSlot component; falls back to car root with a warning.</summary>
+        private Transform FindScoopMount(Transform root)
+        {
+            var slot = root.GetComponentInChildren<CarScoopSlot>();
+            if (slot != null) return slot.transform;
+            Debug.LogWarning($"[PlayerSpawner] CarScoopSlot не найден на '{root.name}'. Добавь пустой дочерний объект спереди машины и повесь на него компонент CarScoopSlot.");
+            return root;
         }
 
         /// <summary>Ищет точку крепления оружия: сначала по компоненту CarWeaponSlot, потом по имени "WeaponSlot".</summary>
         private Transform FindWeaponMount(Transform root)
         {
-            // По компоненту
             var slot = root.GetComponentInChildren<CarWeaponSlot>();
             if (slot != null) return slot.transform;
 
-            // По имени дочернего объекта
-            var byName = root.Find("WeaponSlot");
-            if (byName != null) return byName;
-
-            // Рекурсивный поиск по имени
             foreach (Transform child in root.GetComponentsInChildren<Transform>())
             {
                 if (child.name == "WeaponSlot") return child;
@@ -186,8 +239,6 @@ namespace CarDerby.Gameplay
         /// <summary>Прокидывает WeaponController в PlayerNetwork и PlayerInputHandler на корне машины.</summary>
         private void WireWeaponController(GameObject carRoot, WeaponController weaponController)
         {
-            // PlayerInputHandler уже ищет GetComponentInChildren лениво в Update,
-            // поэтому принудительно ставим через reflection-safe публичный метод или SerializedField
             var inputHandler = carRoot.GetComponent<Player.PlayerInputHandler>();
             if (inputHandler != null)
                 inputHandler.SetWeaponController(weaponController);
@@ -200,14 +251,12 @@ namespace CarDerby.Gameplay
         [ClientRpc]
         private void SpawnWeaponClientRpc(ulong carNetworkObjectId, int weaponIndex)
         {
-            // На сервере уже заспавнили — пропускаем
             if (IsServer) return;
 
             if (_weaponRoster == null || weaponIndex >= _weaponRoster.Length) return;
             var data = _weaponRoster[weaponIndex];
             if (data == null || data.WeaponPrefab == null) return;
 
-            // Находим машину по NetworkObjectId
             if (!NetworkManager.Singleton.SpawnManager.SpawnedObjects
                     .TryGetValue(carNetworkObjectId, out var netObj)) return;
 
@@ -215,10 +264,26 @@ namespace CarDerby.Gameplay
 
             Transform mount = FindWeaponMount(netObj.transform);
             var weaponController = SpawnWeapon(mount, data);
-
-            // Прокидываем на клиенте тоже
             if (weaponController != null)
                 WireWeaponController(netObj.gameObject, weaponController);
+        }
+
+        [ClientRpc]
+        private void SpawnScoopClientRpc(ulong carNetworkObjectId, int scoopIndex)
+        {
+            if (IsServer) return;
+
+            if (_scoopRoster == null || scoopIndex >= _scoopRoster.Length) return;
+            var data = _scoopRoster[scoopIndex];
+            if (data == null || data.WeaponPrefab == null) return;
+
+            if (!NetworkManager.Singleton.SpawnManager.SpawnedObjects
+                    .TryGetValue(carNetworkObjectId, out var netObj)) return;
+
+            Transform mount = FindScoopMount(netObj.transform);
+            var scoopObj = Instantiate(data.WeaponPrefab, mount);
+            scoopObj.transform.localPosition = Vector3.zero;
+            scoopObj.transform.localRotation = Quaternion.identity;
         }
 
         // ── Helpers ──────────────────────────────────────────────────────────

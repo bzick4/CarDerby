@@ -621,6 +621,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2506474107028077369}
   - component: {fileID: 2446241937961077185}
+  - component: {fileID: 237871047977148940}
   m_Layer: 0
   m_Name: GrabPoint
   m_TagString: Untagged
@@ -656,6 +657,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Car.ScoopModifier
   _weaponData: {fileID: 11400000, guid: 1246e2e68ce6048a086d8a7c647689c1, type: 2}
+--- !u!114 &237871047977148940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6044946999123447118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 206660c32f23d4e1c91b578437517891, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Car.CarScoopSlot
 --- !u!1 &6118750766438118836
 GameObject:
   m_ObjectHideFlags: 0
@@ -1166,6 +1179,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Player.PlayerInputHandler
   _carController: {fileID: 9124414942350236600}
   _weaponController: {fileID: 0}
+  _aimMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!114 &-621187488721032558
 MonoBehaviour:
   m_ObjectHideFlags: 0

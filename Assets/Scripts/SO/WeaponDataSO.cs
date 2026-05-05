@@ -54,10 +54,19 @@ namespace CarDerby.SO
         [Tooltip("Радиус взрыва (0 = прямой урон без AoE)")]
         public float ExplosionRadius    = 0f;
 
+        // ── Movement Penalty ──────────────────────────────────────────────────
+        [Header("Movement Penalty")]
+        [Tooltip("На сколько % снижает максимальную скорость машины (0 = нет штрафа, 30 = −30%)")]
+        [Range(0f, 100f)]
+        public float SpeedPenaltyPercent = 0f;
+
         // ── Scoop Stats ────────────────────────────────────────────────────────
         [Header("Scoop Stats  (front scoops only)")]
         public float BonusDamage       = 30f;
         public float SpeedFactor       = 0.70f;
         public float CollisionCooldown = 0.40f;
+        [Tooltip("На сколько % увеличивает макс. здоровье (только ковш, 0 = нет бонуса)")]
+        [Range(0f, 100f)]
+        public float BonusHealthPercent = 0f;
     }
 }

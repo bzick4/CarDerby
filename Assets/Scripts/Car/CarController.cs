@@ -19,7 +19,7 @@ namespace CarDerby.Car
         [SerializeField] private CarPhysics    _physics;
         [SerializeField] private NitroSystem   _nitro;
         [SerializeField] private DriftSystem   _drift;
-        [SerializeField] private ScoopModifier _scoop;
+        [SerializeField] private ScoopModifier _scoop; // можно оставить пустым — PlayerSpawner пропишет динамически
 
         [SerializeField] private float _baseMaxSpeed = 25f;
 
@@ -41,6 +41,8 @@ namespace CarDerby.Car
 
         /// <summary>Угол поворота оружия по Y (мировые градусы) — синхронизируется владельцем.</summary>
         public float WeaponYaw => _netWeaponYaw.Value;
+
+        public void SetScoop(ScoopModifier scoop) { _scoop = scoop; }
 
         // ── NGO lifecycle ────────────────────────────────────────────────────
 
@@ -123,7 +125,7 @@ namespace CarDerby.Car
         {
             if (!IsServer) return;
 
-            float speedCap = _baseMaxSpeed * _nitro.SpeedMultiplier * _scoop.SpeedFactor;
+            float speedCap = _baseMaxSpeed * _nitro.SpeedMultiplier * (_scoop != null ? _scoop.SpeedFactor : 1f);
 
             if (!_netBraking.Value)
                 _physics.ApplyThrottle(_netThrottle.Value, speedCap);

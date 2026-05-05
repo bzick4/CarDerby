@@ -70,6 +70,7 @@
   <Project Path="Unity.Multiplayer.Tools.NetVis.Configuration.csproj" />
   <Project Path="Unity.Services.Multiplayer.Editor.Matchmaker.Authoring.Core.csproj" />
   <Project Path="Unity.Multiplayer.Center.Integrations.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Unity.Entities.Editor.Properties.csproj" />
   <Project Path="Unity.Entities.UI.csproj" />
   <Project Path="Unity.Entities.CodeGen.csproj" />
@@ -84,7 +85,6 @@
   <Project Path="Unity.Scenes.csproj" />
   <Project Path="Unity.InputSystem.TestFramework.csproj" />
   <Project Path="Unity.Multiplayer.Tools.NetStats.CodeGen.csproj" />
-  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Unity.Services.Deployment.Editor.Shared.csproj" />
   <Project Path="Unity.Multiplayer.Tools.NetworkProfiler.Runtime.csproj" />
   <Project Path="Unity.VisualScripting.Shared.Editor.csproj" />
