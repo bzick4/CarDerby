@@ -52,6 +52,9 @@ namespace CarDerby.Player
 
             if (IsOwner)
             {
+                string nickname = PlayerPrefs.GetString("PlayerNickname", $"Player_{OwnerClientId}");
+                PlayerName.Value = nickname;
+
                 _inputHandler.enabled = true;
                 _worldSpaceHealthBar.gameObject.SetActive(false);
                 StartCoroutine(BindLocalPlayerDelayed());
@@ -105,14 +108,15 @@ namespace CarDerby.Player
 
         private IEnumerator BindEnemyBarDelayed()
         {
-            // Ждём пока GameHUD проинициализируется
             float timeout = 2f;
             while (UI.GameHUD.Instance == null && timeout > 0f)
             {
                 yield return null;
                 timeout -= Time.deltaTime;
             }
-            _worldSpaceHealthBar.Initialize(_healthSystem);
+            _worldSpaceHealthBar.Initialize(_healthSystem, PlayerName.Value.ToString());
+            PlayerName.OnValueChanged += (_, newName) =>
+                _worldSpaceHealthBar.SetPlayerName(newName.ToString());
         }
 
         // ── Server-only methods ──────────────────────────────────────────────

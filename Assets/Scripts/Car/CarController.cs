@@ -36,13 +36,18 @@ namespace CarDerby.Car
         public float SteeringValue => _netSteering.Value;
         public bool  IsBraking     => _netBraking.Value;
 
-        /// <summary>Скорость в км/ч — актуально на всех клиентах через NetworkVariable.</summary>
-        public float SpeedKmh => _netSpeed.Value;
+        /// <summary>Скорость в км/ч — актуально на всех клиентах через NetworkVariable. Всегда ≥ 0 (для HUD).</summary>
+        public float SpeedKmh => Mathf.Abs(_netSpeed.Value);
 
         /// <summary>Угол поворота оружия по Y (мировые градусы) — синхронизируется владельцем.</summary>
         public float WeaponYaw => _netWeaponYaw.Value;
 
         public void SetScoop(ScoopModifier scoop) { _scoop = scoop; }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            _scoop?.HandleCollision(collision);
+        }
 
         // ── NGO lifecycle ────────────────────────────────────────────────────
 
@@ -135,8 +140,8 @@ namespace CarDerby.Car
             _physics.ApplySteering(_netSteering.Value);
             _drift.TickDrift();
 
-            // Синхронизируем скорость всем клиентам
-            _netSpeed.Value = _physics.CurrentSpeedKmh;
+            // Синхронизируем знаковую скорость: отрицательная при езде назад → клиент правильно анимирует колёса
+            _netSpeed.Value = _physics.CurrentSpeedKmhSigned;
         }
     }
 }

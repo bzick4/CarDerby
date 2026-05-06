@@ -53,17 +53,37 @@ namespace CarDerby.UI
             root.Q<Button>("scoop-prev-btn").clicked += _onScoopPrev;
             root.Q<Button>("scoop-next-btn").clicked += _onScoopNext;
 
-            // Game mode (host only)
-            root.Q<DropdownField>("gamemode-dropdown").RegisterValueChangedCallback(e =>
+            // Game mode — виден и доступен только хосту
+            var gamemodeRow  = root.Q<DropdownField>("gamemode-dropdown");
+            var gamemodeLabel = root.Q<Label>("gamemode-label");
+            bool isHost = NetworkManager.Singleton.IsHost;
+            if (gamemodeRow  != null) gamemodeRow.style.display  = isHost ? DisplayStyle.Flex : DisplayStyle.None;
+            if (gamemodeLabel != null) gamemodeLabel.style.display = isHost ? DisplayStyle.Flex : DisplayStyle.None;
+            if (isHost)
             {
-                if (NetworkManager.Singleton.IsHost)
-                    _lobby.SetGameModeServerRpc(e.newValue);
-            });
+                gamemodeRow.RegisterValueChangedCallback(e => _lobby.SetGameModeServerRpc(e.newValue));
+            }
+
+            // Nickname field — загружаем сохранённый ник, отправляем на сервер только когда лобби готово
+            var nickField = root.Q<TextField>("nickname-field");
+            if (nickField != null)
+            {
+                string saved = PlayerPrefs.GetString("PlayerNickname", $"Player_{NetworkManager.Singleton.LocalClientId}");
+                nickField.value = saved;
+
+                nickField.RegisterValueChangedCallback(e =>
+                {
+                    string nick = e.newValue.Trim();
+                    if (nick.Length == 0) return;
+                    PlayerPrefs.SetString("PlayerNickname", nick);
+                    PlayerPrefs.Save();
+                    if (_lobby != null && _lobby.IsSpawned)
+                        _lobby.SetNicknameServerRpc(nick);
+                });
+            }
 
             root.Q<Button>("ready-btn").clicked += ToggleReady;
             root.Q<Button>("start-btn").clicked += OnStartClicked;
-
-            bool isHost = NetworkManager.Singleton.IsHost;
             root.Q<Button>("start-btn").style.display = isHost ? DisplayStyle.Flex : DisplayStyle.None;
 
             // Подписываемся напрямую на NetworkList — самый надёжный путь
@@ -193,6 +213,14 @@ namespace CarDerby.UI
             if (!_lobby.IsSpawned) return;
 
             _isReady = !_isReady;
+
+            // Отправляем ник при каждом нажатии Ready — гарантирует что лобби уже заспавнено
+            var nf = _doc.rootVisualElement.Q<TextField>("nickname-field");
+            if (nf != null)
+            {
+                string nick = nf.value.Trim();
+                if (nick.Length > 0) _lobby.SetNicknameServerRpc(nick);
+            }
 
             _lobby.SetReadyServerRpc(_isReady);
             _lobby.SetLoadoutServerRpc(

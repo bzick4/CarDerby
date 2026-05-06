@@ -62,10 +62,21 @@ namespace CarDerby.SO
 
         // ── Scoop Stats ────────────────────────────────────────────────────────
         [Header("Scoop Stats  (front scoops only)")]
-        public float BonusDamage       = 30f;
+        [Tooltip("Максимальный урон противнику при 100% скорости")]
+        public float MaxScoopDamage    = 15f;
+        [Tooltip("Множитель скорости машины пока ковш цел (0.7 = −30%)")]
         public float SpeedFactor       = 0.70f;
+        [Tooltip("Кулдаун между засчитанными ударами (сек)")]
         public float CollisionCooldown = 0.40f;
-        [Tooltip("На сколько % увеличивает макс. здоровье (только ковш, 0 = нет бонуса)")]
+        [Tooltip("HP самого ковша")]
+        public float ScoopMaxHealth    = 100f;
+        [Tooltip("Мин. урон ковшу за удар (% от ScoopMaxHealth)")]
+        [Range(0f, 100f)]
+        public float ScoopDamageMinPercent = 5f;
+        [Tooltip("Макс. урон ковшу за удар (% от ScoopMaxHealth)")]
+        [Range(0f, 100f)]
+        public float ScoopDamageMaxPercent = 10f;
+        [Tooltip("На сколько % увеличивает макс. здоровье машины (0 = нет бонуса)")]
         [Range(0f, 100f)]
         public float BonusHealthPercent = 0f;
     }

@@ -7,8 +7,7 @@
     <ui:VisualElement name="root" class="fullscreen" style="background-color: rgba(5,5,10,0.92); flex-direction: column;">
 
         <!-- Header -->
-        <ui:Label name="lobby-title" text="LOBBY" class="panel-title"
-                  style="margin-top: 20px; font-size: 30px;" />
+        <ui:Label name="lobby-title" text="LOBBY" class="panel-title" />
 
         <!-- Main area: player list + settings -->
         <ui:VisualElement class="lobby-layout">
@@ -23,7 +22,10 @@
             <!-- Right: game settings + loadout -->
             <ui:VisualElement class="settings-panel">
 
-                <ui:Label text="GAME MODE" class="section-label" />
+                <ui:Label text="NICKNAME" class="section-label" />
+                <ui:TextField name="nickname-field" class="nickname-field" max-length="20" />
+
+                <ui:Label name="gamemode-label" text="GAME MODE" class="section-label" />
                 <ui:DropdownField name="gamemode-dropdown" class="dropdown"
                                   choices="Deathmatch,Last Man Standing" index="0" />
 

@@ -94,6 +94,16 @@ namespace CarDerby.Networking
         }
 
         [ServerRpc(RequireOwnership = false)]
+        public void SetNicknameServerRpc(string nickname, ServerRpcParams rpc = default)
+        {
+            ulong sender = rpc.Receive.SenderClientId;
+            if (string.IsNullOrWhiteSpace(nickname)) return;
+            string trimmed = nickname.Length > 20 ? nickname.Substring(0, 20) : nickname;
+            UpdatePlayer(sender, p => { p.DisplayName = trimmed; return p; });
+            NotifyChangedClientRpc();
+        }
+
+        [ServerRpc(RequireOwnership = false)]
         public void SetLoadoutServerRpc(int carIndex, int weaponIndex, int scoopIndex, ServerRpcParams rpc = default)
         {
             ulong sender = rpc.Receive.SenderClientId;

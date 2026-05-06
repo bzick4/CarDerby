@@ -24,13 +24,14 @@ namespace CarDerby.UI
         private Health.HealthSystem _healthSystem;
         private VisualElement       _bar;
         private VisualElement       _fill;
+        private Label               _nameLabel;
         private Camera              _cam;
         private bool                _initialized;
 
         // ── Public API ───────────────────────────────────────────────────────
 
         /// <summary>Call this once the enemy player's HealthSystem is ready.</summary>
-        public void Initialize(Health.HealthSystem hs)
+        public void Initialize(Health.HealthSystem hs, string playerName = "")
         {
             if (GameHUD.Instance == null)
             {
@@ -42,11 +43,21 @@ namespace CarDerby.UI
             _cam          = Camera.main;
             _bar          = GameHUD.Instance.RegisterEnemyBar(out _fill);
 
+            // Nickname label above the bar
+            _nameLabel = new Label(playerName);
+            _nameLabel.AddToClassList("ws-name-label");
+            _bar.Insert(0, _nameLabel);
+
             _healthSystem.OnHealthChanged += UpdateFill;
             _healthSystem.OnDeath         += OnOwnerDied;
 
             UpdateFill(hs.CurrentHealth, hs.MaxHealth);
             _initialized = true;
+        }
+
+        public void SetPlayerName(string name)
+        {
+            if (_nameLabel != null) _nameLabel.text = name;
         }
 
         // ── Lifecycle ────────────────────────────────────────────────────────

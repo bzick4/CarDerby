@@ -1,13 +1,11 @@
 // Assets/Scripts/Combat/BombProjectile.cs
-using UnityEngine;
-
 namespace CarDerby.Combat
 {
     public sealed class BombProjectile : ProjectileBase
     {
-        protected override void ConfigureRigidbody(Rigidbody rb)
+        protected override void OnHit(UnityEngine.Collider other)
         {
-            rb.useGravity = true;
+            ApplySplashDamage(transform.position);
         }
 
         protected override void OnLifetimeExpired()

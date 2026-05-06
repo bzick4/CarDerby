@@ -46,9 +46,14 @@ namespace CarDerby.UI
             var bar = new VisualElement();
             bar.AddToClassList("ws-bar");
 
+            // Track clips the fill; name label is inserted above it by WorldSpaceHealthBar
+            var track = new VisualElement();
+            track.AddToClassList("ws-bar-track");
+
             fill = new VisualElement();
             fill.AddToClassList("ws-bar-fill");
-            bar.Add(fill);
+            track.Add(fill);
+            bar.Add(track);
 
             _wsOverlay?.Add(bar);
             return bar;

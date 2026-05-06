@@ -27,7 +27,10 @@ MonoBehaviour:
   ProjectileLifetime: 1.5
   ExplosionRadius: 0
   SpeedPenaltyPercent: 20
-  BonusDamage: 30
+  MaxScoopDamage: 15
   SpeedFactor: 0.7
   CollisionCooldown: 0.4
+  ScoopMaxHealth: 100
+  ScoopDamageMinPercent: 5
+  ScoopDamageMaxPercent: 10
   BonusHealthPercent: 15

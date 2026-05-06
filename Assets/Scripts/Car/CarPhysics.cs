@@ -38,8 +38,13 @@ namespace CarDerby.Car
 
         private Rigidbody _rb;
 
-        // CurrentSpeed в км/ч для UI
+        // CurrentSpeed в км/ч для UI (всегда положительный)
         public float CurrentSpeedKmh => _rb != null ? _rb.linearVelocity.magnitude * 3.6f : 0f;
+
+        // Знаковая скорость: отрицательная при езде назад — для синхронизации вращения колёс
+        public float CurrentSpeedKmhSigned => _rb != null
+            ? Vector3.Dot(_rb.linearVelocity, transform.forward) * 3.6f
+            : 0f;
         public float MaxSteerAngle   => _settings.MaxSteerAngle;
         public float MaxSpeedKmh     { get; private set; } = 120f;
         private float _baseMaxSpeedKmh = 120f;
@@ -118,11 +123,18 @@ namespace CarDerby.Car
 
         public void ApplyThrottle(float input, float speedCap)
         {
-            // speedCap из CarController может быть переопределён нитро/ковшом,
-            // но не превышает MaxSpeedMs из SO
-            float cap = Mathf.Min(speedCap, MaxSpeedMs);
+            bool reversing = input < 0f;
+            const float ReverseCapMs = 20f / 3.6f;
+            float cap = reversing
+                ? ReverseCapMs
+                : Mathf.Min(speedCap, MaxSpeedMs);
+
+            // Текущая скорость вдоль оси машины (отрицательная = едем назад)
+            float forwardSpeed = Vector3.Dot(_rb.linearVelocity, transform.forward);
+            float currentSpeed = reversing ? -forwardSpeed : forwardSpeed;
+
             float torque = 0f;
-            if (_rb.linearVelocity.magnitude < cap)
+            if (currentSpeed < cap)
                 torque = input * _settings.MotorTorque;
 
             // Задний привод

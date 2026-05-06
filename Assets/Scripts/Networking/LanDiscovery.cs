@@ -148,10 +148,11 @@ namespace CarDerby.Networking
             }
         }
 
-        /// <summary>Возвращает broadcast-адреса всех активных сетевых интерфейсов + loopback.</summary>
+        /// <summary>Возвращает broadcast-адреса всех активных сетевых интерфейсов.
+        /// Loopback добавляется только если реальных интерфейсов не найдено.</summary>
         private static List<IPAddress> GetBroadcastAddresses()
         {
-            var list = new List<IPAddress> { IPAddress.Loopback }; // всегда добавляем loopback
+            var list = new List<IPAddress>();
 
             try
             {
@@ -174,7 +175,11 @@ namespace CarDerby.Networking
                     }
                 }
             }
-            catch { /* не смогли получить интерфейсы — используем только loopback */ }
+            catch { /* не смогли получить интерфейсы */ }
+
+            // Loopback только как fallback — чтобы не дублировать пакет на той же машине
+            if (list.Count == 0)
+                list.Add(IPAddress.Loopback);
 
             return list;
         }
