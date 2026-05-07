@@ -19,7 +19,6 @@
         <ui:VisualElement name="host-panel" class="center-panel hidden">
             <ui:Label text="HOST GAME" class="panel-title" />
             <ui:TextField label="Server name" name="host-name"     class="input-field" value="My Derby" />
-            <ui:TextField label="Port"        name="host-port"     class="input-field" value="7777" />
             <ui:TextField label="Password"    name="host-password" class="input-field" password="true" />
             <ui:Button text="START HOST" name="confirm-host-btn" class="menu-btn" />
             <ui:Button text="BACK"       name="host-back-btn"   class="menu-btn secondary" />
@@ -42,6 +41,14 @@
             <ui:VisualElement class="row" style="margin-top: 12px;">
                 <ui:Button text="REFRESH" name="refresh-btn"      class="menu-btn" style="width: 140px; margin-right: 8px;" />
                 <ui:Button text="BACK"    name="browser-back-btn" class="menu-btn secondary" style="width: 140px;" />
+            </ui:VisualElement>
+
+            <!-- Оверлей ввода пароля — появляется поверх списка -->
+            <ui:VisualElement name="password-overlay" class="password-overlay hidden">
+                <ui:Label text="SERVER PASSWORD" class="panel-title" />
+                <ui:TextField name="browser-password" class="input-field" password="true" />
+                <ui:Button text="CONNECT" name="browser-connect-btn" class="menu-btn" />
+                <ui:Button text="CANCEL"  name="browser-cancel-btn"  class="menu-btn secondary" />
             </ui:VisualElement>
         </ui:VisualElement>
 

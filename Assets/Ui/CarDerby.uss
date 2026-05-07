@@ -24,7 +24,7 @@
     left: 50%;
     translate: -200px -50%;
     width: 400px;
-    padding: 40px 32px;
+    padding: 24px 32px;
     background-color: rgba(8, 8, 16, 0.88);
     border-radius: 12px;
     border-color: rgba(200, 50, 50, 0.6);
@@ -161,6 +161,18 @@
     -unity-text-align: middle-center;
     color: white;
     font-size: 10px;
+}
+
+/* ── Password overlay ───────────────────────────────────────────────────────── */
+
+.password-overlay {
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
+    background-color: rgba(5, 5, 10, 0.92);
+    border-radius: 12px;
+    padding: 40px 48px;
+    align-items: stretch;
+    justify-content: center;
 }
 
 /* ── Server browser ──────────────────────────────────────────────────────── */

@@ -56,6 +56,7 @@
 
         <!-- Footer -->
         <ui:VisualElement class="lobby-footer">
+            <ui:Button name="leave-btn" text="LEAVE"      class="menu-btn secondary" style="margin-right: auto;" />
             <ui:Button name="ready-btn" text="READY"      class="menu-btn ready-btn" />
             <ui:Button name="start-btn" text="START GAME" class="menu-btn start-btn hidden" />
         </ui:VisualElement>

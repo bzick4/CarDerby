@@ -124,7 +124,7 @@ namespace CarDerby.Car
         public void ApplyThrottle(float input, float speedCap)
         {
             bool reversing = input < 0f;
-            const float ReverseCapMs = 20f / 3.6f;
+            const float ReverseCapMs = 15f / 3.6f;
             float cap = reversing
                 ? ReverseCapMs
                 : Mathf.Min(speedCap, MaxSpeedMs);
@@ -150,6 +150,15 @@ namespace CarDerby.Car
 
             // Прижимная сила — устойчивость на скорости
             _rb.AddForce(-transform.up * _settings.DownForce * _rb.linearVelocity.magnitude);
+        }
+
+        /// <summary>Вызывается каждый FixedUpdate — жёстко ограничивает скорость назад.</summary>
+        public void ClampReverseSpeed()
+        {
+            const float ReverseCapMs = 15f / 3.6f;
+            float fwdSpd = Vector3.Dot(_rb.linearVelocity, transform.forward);
+            if (fwdSpd < -ReverseCapMs)
+                _rb.linearVelocity -= transform.forward * (fwdSpd + ReverseCapMs);
         }
 
         public void ApplySteering(float input)

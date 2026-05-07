@@ -138,6 +138,7 @@ namespace CarDerby.Car
                 _physics.ApplyBrake(1f);
 
             _physics.ApplySteering(_netSteering.Value);
+            _physics.ClampReverseSpeed();
             _drift.TickDrift();
 
             // Синхронизируем знаковую скорость: отрицательная при езде назад → клиент правильно анимирует колёса

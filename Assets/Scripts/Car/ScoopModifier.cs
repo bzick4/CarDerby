@@ -61,6 +61,11 @@ namespace CarDerby.Car
             if (Unity.Netcode.NetworkManager.Singleton == null ||
                 !Unity.Netcode.NetworkManager.Singleton.IsServer) return;
 
+            // Урон только когда враг находится спереди ковша
+            // Проверяем позицию врага, а не точку контакта — при лобовом таране точка прямо на ковше и вектор ≈ 0
+            Vector3 toEnemy = collision.transform.position - transform.position;
+            if (Vector3.Dot(toEnemy.normalized, transform.forward) < 0.4f) return;
+
             if (Time.time - _lastHitTime < _weaponData.CollisionCooldown) return;
             _lastHitTime = Time.time;
 

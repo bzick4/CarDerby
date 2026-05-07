@@ -26,16 +26,19 @@ namespace CarDerby.UI
 
         private UIDocument    _doc;
         private VisualElement _mainPanel, _hostPanel, _joinPanel, _browserPanel;
+        private VisualElement _passwordOverlay;
+        private Networking.ServerInfo _pendingServer;
 
         private void OnEnable()
         {
             _doc = GetComponent<UIDocument>();
             var root = _doc.rootVisualElement;
 
-            _mainPanel    = root.Q("main-panel");
-            _hostPanel    = root.Q("host-panel");
-            _joinPanel    = root.Q("join-panel");
-            _browserPanel = root.Q("browser-panel");
+            _mainPanel       = root.Q("main-panel");
+            _hostPanel       = root.Q("host-panel");
+            _joinPanel       = root.Q("join-panel");
+            _browserPanel    = root.Q("browser-panel");
+            _passwordOverlay = root.Q("password-overlay");
 
             root.Q<Button>("host-btn")  .clicked += () => ShowPanel(_hostPanel);
             root.Q<Button>("join-btn")  .clicked += () => ShowPanel(_joinPanel);
@@ -48,8 +51,10 @@ namespace CarDerby.UI
             root.Q<Button>("confirm-join-btn").clicked += OnConfirmJoin;
             root.Q<Button>("join-back-btn")   .clicked += () => ShowPanel(_mainPanel);
 
-            root.Q<Button>("refresh-btn")     .clicked += () => _ = _browser.RefreshAsync();
-            root.Q<Button>("browser-back-btn").clicked += () => ShowPanel(_mainPanel);
+            root.Q<Button>("refresh-btn")        .clicked += () => _ = _browser.RefreshAsync();
+            root.Q<Button>("browser-back-btn")   .clicked += () => ShowPanel(_mainPanel);
+            root.Q<Button>("browser-connect-btn").clicked += OnPasswordConnect;
+            root.Q<Button>("browser-cancel-btn") .clicked += () => ShowPasswordOverlay(false);
 
             _session.OnConnectionFailed += OnConnectionFailed;
             _browser.OnServersRefreshed += RebuildServerList;
@@ -69,7 +74,7 @@ namespace CarDerby.UI
         {
             var root    = _doc.rootVisualElement;
             string name = root.Q<TextField>("host-name").value;
-            ushort port = ParsePort(root.Q<TextField>("host-port").value);
+            ushort port = FindFreePort();
             string pass = root.Q<TextField>("host-password").value;
 
             _session.StartHost("0.0.0.0", port, pass);
@@ -165,7 +170,19 @@ namespace CarDerby.UI
                     $"{srv.CurrentPlayers}/{srv.MaxPlayers}  {srv.GameMode}{(srv.HasPassword ? "  🔒" : "")}");
                 infoLabel.AddToClassList("server-row-info");
 
-                var joinBtn = new Button(() => _browser.JoinServer(srv)) { text = "JOIN" };
+                var captured = srv;
+                var joinBtn = new Button(() =>
+                {
+                    if (captured.HasPassword)
+                    {
+                        _pendingServer = captured;
+                        ShowPasswordOverlay(true);
+                    }
+                    else
+                    {
+                        _browser.JoinServer(captured);
+                    }
+                }) { text = "JOIN" };
                 joinBtn.AddToClassList("menu-btn");
                 joinBtn.AddToClassList("server-row-join");
 
@@ -209,12 +226,50 @@ namespace CarDerby.UI
             return true;
         }
 
+        private void ShowPasswordOverlay(bool show)
+        {
+            _passwordOverlay.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
+            if (show)
+                _doc.rootVisualElement.Q<TextField>("browser-password").value = "";
+        }
+
+        private void OnPasswordConnect()
+        {
+            string pass = _doc.rootVisualElement.Q<TextField>("browser-password").value;
+            ShowPasswordOverlay(false);
+            _browser.JoinServer(_pendingServer, pass);
+        }
+
         private void ShowPanel(VisualElement target)
         {
             _mainPanel   .style.display = target == _mainPanel    ? DisplayStyle.Flex : DisplayStyle.None;
             _hostPanel   .style.display = target == _hostPanel    ? DisplayStyle.Flex : DisplayStyle.None;
             _joinPanel   .style.display = target == _joinPanel    ? DisplayStyle.Flex : DisplayStyle.None;
             _browserPanel.style.display = target == _browserPanel ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
+        private static ushort FindFreePort(ushort start = 7777)
+        {
+            for (ushort port = start; port <= 9999; port++)
+            {
+                if (IsUdpPortFree(port)) return port;
+            }
+            for (ushort port = 1024; port < start; port++)
+            {
+                if (IsUdpPortFree(port)) return port;
+            }
+            return start;
+        }
+
+        private static bool IsUdpPortFree(ushort port)
+        {
+            try
+            {
+                var u = new System.Net.Sockets.UdpClient(port);
+                u.Close();
+                return true;
+            }
+            catch { return false; }
         }
 
         private static ushort ParsePort(string s) =>

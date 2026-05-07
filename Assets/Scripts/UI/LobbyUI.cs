@@ -13,7 +13,8 @@ namespace CarDerby.UI
         [SerializeField] private Networking.LobbyManager            _lobby;
         [SerializeField] private Customization.CarSelectionSystem    _cars;
         [SerializeField] private Customization.WeaponSelectionSystem _weapons;
-        [SerializeField] private string _gameSceneName = "GameScene";
+        [SerializeField] private string _gameSceneName  = "GameScene";
+        [SerializeField] private string _menuSceneName  = "MainMenu";
 
         private UIDocument _doc;
         private bool       _isReady;
@@ -82,6 +83,7 @@ namespace CarDerby.UI
                 });
             }
 
+            root.Q<Button>("leave-btn").clicked += OnLeaveClicked;
             root.Q<Button>("ready-btn").clicked += ToggleReady;
             root.Q<Button>("start-btn").clicked += OnStartClicked;
             root.Q<Button>("start-btn").style.display = isHost ? DisplayStyle.Flex : DisplayStyle.None;
@@ -131,6 +133,7 @@ namespace CarDerby.UI
             root.Q<Button>("weapon-next-btn").clicked -= _onWeaponNext;
             root.Q<Button>("scoop-prev-btn").clicked  -= _onScoopPrev;
             root.Q<Button>("scoop-next-btn").clicked  -= _onScoopNext;
+            root.Q<Button>("leave-btn").clicked       -= OnLeaveClicked;
             root.Q<Button>("ready-btn").clicked       -= ToggleReady;
             root.Q<Button>("start-btn").clicked       -= OnStartClicked;
         }
@@ -235,6 +238,14 @@ namespace CarDerby.UI
             btn.text = _isReady ? "CANCEL" : "READY";
             if (_isReady) btn.AddToClassList("is-ready");
             else          btn.RemoveFromClassList("is-ready");
+        }
+
+        // ── Leave ────────────────────────────────────────────────────────────
+
+        private void OnLeaveClicked()
+        {
+            NetworkManager.Singleton.Shutdown();
+            UnityEngine.SceneManagement.SceneManager.LoadScene(_menuSceneName);
         }
 
         // ── Start ────────────────────────────────────────────────────────────
