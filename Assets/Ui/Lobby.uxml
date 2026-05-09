@@ -22,9 +22,6 @@
             <!-- Right: game settings + loadout -->
             <ui:VisualElement class="settings-panel">
 
-                <ui:Label text="NICKNAME" class="section-label" />
-                <ui:TextField name="nickname-field" class="nickname-field" max-length="20" />
-
                 <ui:Label name="gamemode-label" text="GAME MODE" class="section-label" />
                 <ui:DropdownField name="gamemode-dropdown" class="dropdown"
                                   choices="Deathmatch,Last Man Standing" index="0" />

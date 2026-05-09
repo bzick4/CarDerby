@@ -6,13 +6,36 @@
 
     <ui:VisualElement name="root" class="fullscreen">
 
-        <!-- ── MAIN PANEL ─────────────────────────────────────────── -->
-        <ui:VisualElement name="main-panel" class="center-panel">
-            <ui:Label text="CAR DERBY" name="title" class="title-label" />
-            <ui:Button text="HOST GAME"      name="host-btn"   class="menu-btn" />
-            <ui:Button text="JOIN BY IP"     name="join-btn"   class="menu-btn" />
-            <ui:Button text="BROWSE SERVERS" name="browse-btn" class="menu-btn" />
-            <ui:Button text="QUIT"           name="quit-btn"   class="menu-btn secondary" />
+        <!-- ── AUTH PANEL (top-right) ─────────────────────────────── -->
+        <ui:VisualElement name="auth-panel" class="auth-panel">
+            <ui:Label name="auth-status" text="Connecting..." class="auth-status" />
+
+            <!-- Показывается после входа -->
+            <ui:VisualElement name="auth-signed-in" class="hidden">
+                <ui:VisualElement class="row" style="justify-content: space-between;">
+                    <ui:Label name="auth-nickname" text="" class="auth-nickname" />
+                    <ui:Button name="auth-edit-btn" text="Edit" class="auth-edit-btn" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- Строка редактирования ника -->
+            <ui:VisualElement name="auth-edit-row" class="hidden row">
+                <ui:TextField name="auth-nickname-field" class="auth-nickname-field" max-length="20" />
+                <ui:Button name="auth-save-btn" text="Save" class="auth-save-btn" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- ── MAIN PANEL (left strip) ───────────────────────────── -->
+        <ui:VisualElement name="main-panel" class="main-panel-strip">
+            <ui:Label text="CAR" class="strip-title-top" />
+            <ui:Label text="DERBY" class="strip-title-bottom" />
+
+            <ui:VisualElement class="strip-nav">
+                <ui:Button text="HOST GAME"      name="host-btn"   class="strip-btn" />
+                <ui:Button text="JOIN BY IP"     name="join-btn"   class="strip-btn" />
+                <ui:Button text="BROWSE SERVERS" name="browse-btn" class="strip-btn" />
+                <ui:Button text="QUIT"           name="quit-btn"   class="strip-btn strip-btn-quit" />
+            </ui:VisualElement>
         </ui:VisualElement>
 
         <!-- ── HOST PANEL ─────────────────────────────────────────── -->
@@ -43,7 +66,7 @@
                 <ui:Button text="BACK"    name="browser-back-btn" class="menu-btn secondary" style="width: 140px;" />
             </ui:VisualElement>
 
-            <!-- Оверлей ввода пароля — появляется поверх списка -->
+            <!-- Оверлей ввода пароля -->
             <ui:VisualElement name="password-overlay" class="password-overlay hidden">
                 <ui:Label text="SERVER PASSWORD" class="panel-title" />
                 <ui:TextField name="browser-password" class="input-field" password="true" />

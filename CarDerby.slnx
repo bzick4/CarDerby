@@ -4,6 +4,7 @@
   <Project Path="Unity.Services.Authentication.PlayerAccounts.csproj" />
   <Project Path="Unity.Services.Core.Internal.csproj" />
   <Project Path="Unity.Multiplayer.Tools.NetStatsMonitor.Configuration.csproj" />
+  <Project Path="Unity.Services.CloudSave.csproj" />
   <Project Path="Unity.ScriptableBuildPipeline.Editor.csproj" />
   <Project Path="Unity.Services.Vivox.csproj" />
   <Project Path="Unity.Mathematics.csproj" />
@@ -99,6 +100,7 @@
   <Project Path="Unity.AI.Navigation.csproj" />
   <Project Path="Unity.Mathematics.Editor.csproj" />
   <Project Path="Unity.Services.Core.csproj" />
+  <Project Path="Unity.Services.CloudSave.Editor.csproj" />
   <Project Path="Unity.CollabProxy.Editor.csproj" />
   <Project Path="Unity.Multiplayer.Tools.Common.csproj" />
   <Project Path="Unity.Netcode.Editor.CodeGen.csproj" />

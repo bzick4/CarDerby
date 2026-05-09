@@ -321,6 +321,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CarDerby.UI.MainMenuUI
   _session: {fileID: 1861172831}
   _browser: {fileID: 1861172830}
+  _auth: {fileID: 1861172836}
   _lobbySceneName: Lobby
 --- !u!114 &1773179534
 MonoBehaviour:
@@ -501,6 +502,7 @@ GameObject:
   - component: {fileID: 1861172831}
   - component: {fileID: 1861172830}
   - component: {fileID: 1861172835}
+  - component: {fileID: 1861172836}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -636,6 +638,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fe90b33420df4fb6a2edec1d17c12b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Networking.LanDiscovery
+--- !u!114 &1861172836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1861172829}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0fc8123b857a4cf0b75a295e7f06662, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CarDerby.Networking.AuthManager
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

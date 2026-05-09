@@ -16,6 +16,141 @@
     justify-content: center;
 }
 
+/* ── Main menu (left strip) ──────────────────────────────────────────────── */
+
+.main-panel-strip {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 280px;
+    background-color: rgba(4, 4, 8, 0.82);
+    padding: 48px 36px 40px 36px;
+    flex-direction: column;
+    align-items: flex-start;
+    border-right-color: rgba(200, 50, 50, 0.25);
+    border-right-width: 1px;
+}
+
+.strip-title-top {
+    font-size: 48px;
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+    letter-spacing: 4px;
+    line-height: 1;
+    margin-bottom: 0;
+}
+
+.strip-title-bottom {
+    font-size: 48px;
+    color: rgb(210, 40, 40);
+    -unity-font-style: bold;
+    letter-spacing: 4px;
+    line-height: 1;
+    margin-bottom: 48px;
+}
+
+.strip-nav {
+    flex-direction: column;
+    align-items: flex-start;
+    flex-grow: 1;
+}
+
+.strip-btn {
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+    color: rgb(210, 210, 210);
+    font-size: 15px;
+    -unity-font-style: bold;
+    letter-spacing: 2px;
+    padding: 8px 0;
+    margin: 2px 0;
+    -unity-text-align: middle-left;
+    width: 200px;
+    transition-property: color, translate;
+    transition-duration: 0.1s;
+}
+
+.strip-btn:hover {
+    color: rgb(255, 255, 255);
+    translate: 6px 0;
+}
+
+.strip-btn:active {
+    color: rgb(200, 40, 40);
+}
+
+.strip-btn-quit {
+    color: rgb(130, 130, 130);
+    margin-top: auto;
+    font-size: 13px;
+}
+
+/* ── Auth panel (top-right) ──────────────────────────────────────────────── */
+
+.auth-panel {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    width: 220px;
+    padding: 14px 18px;
+    background-color: rgba(8, 8, 16, 0.88);
+    border-radius: 10px;
+    border-color: rgba(200, 50, 50, 0.4);
+    border-width: 1px;
+    align-items: stretch;
+}
+
+.auth-status {
+    color: rgb(140, 140, 140);
+    font-size: 10px;
+    -unity-text-align: middle-center;
+}
+
+.auth-nickname {
+    color: white;
+    font-size: 13px;
+    -unity-font-style: bold;
+    flex-grow: 1;
+}
+
+.auth-edit-btn {
+    width: 40px;
+    height: 22px;
+    font-size: 9px;
+    background-color: rgba(80, 80, 80, 0.9);
+    border-radius: 3px;
+    border-width: 0;
+    color: rgb(200, 200, 200);
+}
+
+.auth-nickname-field {
+    flex-grow: 1;
+    height: 24px;
+    font-size: 11px;
+    background-color: rgba(40, 40, 40, 0.9);
+    border-color: rgba(120, 120, 120, 0.5);
+    border-radius: 4px;
+    border-width: 1px;
+    margin-right: 6px;
+}
+
+.auth-nickname-field > .unity-base-field__input {
+    background-color: rgba(40, 40, 40, 0.9);
+    color: rgb(220, 220, 220);
+    border-width: 0;
+    padding: 0 6px;
+}
+
+.auth-save-btn {
+    width: 44px;
+    height: 24px;
+    font-size: 9px;
+    -unity-font-style: bold;
+    background-color: rgb(190, 40, 40);
+    border-radius: 3px;
+    border-width: 0;
+    color: white;
+}
+
 /* ── Shared panel chrome ─────────────────────────────────────────────────── */
 
 .center-panel {
@@ -242,8 +377,8 @@
     border-radius: 3px;
 }
 
-.player-row-name   { flex-grow: 1; color: white; font-size: 10px; }
-.player-row-status          { font-size: 9px; color: rgb(160, 160, 160); }
+.player-row-name             { flex-grow: 1; color: white; font-size: 10px; }
+.player-row-status           { font-size: 9px; color: rgb(160, 160, 160); }
 .player-row-status.is-ready  { color: rgb(100, 200, 100); }
 .player-row-status.not-ready { color: rgb(200, 100, 100); }
 
