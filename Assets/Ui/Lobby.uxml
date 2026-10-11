@@ -1,61 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Assets/UI/Lobby.uxml -->
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
 
     <ui:Style src="CarDerby.uss" />
 
-    <ui:VisualElement name="root" class="fullscreen" style="background-color: rgba(5,5,10,0.92); flex-direction: column;">
+    <ui:VisualElement name="root" class="fullscreen">
 
-        <!-- Header -->
-        <ui:Label name="lobby-title" text="LOBBY" class="panel-title" />
-
-        <!-- Main area: player list + settings -->
-        <ui:VisualElement class="lobby-layout">
-
-            <!-- Left: player list -->
-            <ui:VisualElement class="player-list-panel">
-                <ui:Label text="PLAYERS" class="section-label" />
-                <ui:ScrollView name="player-list" class="player-list" />
-                <ui:Label name="lobby-status" text="0 / 8  players" class="status-label" />
+        <!-- ── 1. ВЫБОР АВТО ────────────────────────────────────── -->
+        <ui:VisualElement name="car-selection-panel" class="fullscreen">
+            <ui:Button name="car-prev-btn" text="&#x2039;" class="car-edge-arrow car-edge-left" />
+            <ui:Button name="car-next-btn" text="&#x203A;" class="car-edge-arrow car-edge-right" />
+            <ui:VisualElement class="car-selection-bottom">
+                <ui:Button name="car-back-btn"    text="&#x2039; MENU"           class="car-selection-back" />
+                <ui:Label  name="car-name-label"  text="—"                        class="car-selection-name" />
+                <ui:Button name="car-confirm-btn" text="SELECT WEAPON  &#x203A;"  class="car-selection-confirm" />
             </ui:VisualElement>
-
-            <!-- Right: game settings + loadout -->
-            <ui:VisualElement class="settings-panel">
-
-                <ui:Label name="gamemode-label" text="GAME MODE" class="section-label" />
-                <ui:DropdownField name="gamemode-dropdown" class="dropdown"
-                                  choices="Deathmatch,Last Man Standing" index="0" />
-
-                <ui:Label text="CAR" class="section-label" />
-                <ui:VisualElement class="row">
-                    <ui:Button text="&lt;" name="car-prev-btn"  class="arrow-btn" />
-                    <ui:Label  name="car-name-label" text="--"   class="select-label" />
-                    <ui:Button text="&gt;" name="car-next-btn"  class="arrow-btn" />
-                </ui:VisualElement>
-
-                <ui:Label text="ROOF WEAPON" class="section-label" />
-                <ui:VisualElement class="row">
-                    <ui:Button text="&lt;" name="weapon-prev-btn"  class="arrow-btn" />
-                    <ui:Label  name="weapon-name-label" text="--"   class="select-label" />
-                    <ui:Button text="&gt;" name="weapon-next-btn"  class="arrow-btn" />
-                </ui:VisualElement>
-
-                <ui:Label text="FRONT SCOOP" class="section-label" />
-                <ui:VisualElement class="row">
-                    <ui:Button text="&lt;" name="scoop-prev-btn"  class="arrow-btn" />
-                    <ui:Label  name="scoop-name-label" text="None" class="select-label" />
-                    <ui:Button text="&gt;" name="scoop-next-btn"  class="arrow-btn" />
-                </ui:VisualElement>
-
-            </ui:VisualElement>
-
         </ui:VisualElement>
 
-        <!-- Footer -->
-        <ui:VisualElement class="lobby-footer">
-            <ui:Button name="leave-btn" text="LEAVE"      class="menu-btn secondary" style="margin-right: auto;" />
-            <ui:Button name="ready-btn" text="READY"      class="menu-btn ready-btn" />
-            <ui:Button name="start-btn" text="START GAME" class="menu-btn start-btn hidden" />
+        <!-- ── 2. ВЫБОР ОРУЖИЯ ──────────────────────────────────── -->
+        <ui:VisualElement name="weapon-selection-panel" class="fullscreen hidden">
+            <ui:Label text="ROOF WEAPON" class="selection-step-hint" />
+            <ui:Button name="weapon-prev-btn" text="&#x2039;" class="car-edge-arrow car-edge-left" />
+            <ui:Button name="weapon-next-btn" text="&#x203A;" class="car-edge-arrow car-edge-right" />
+            <ui:VisualElement class="car-selection-bottom">
+                <ui:Button name="weapon-back-btn"    text="&#x2039; CAR"           class="car-selection-back" />
+                <ui:Label  name="weapon-name-label"  text="—"                       class="car-selection-name" />
+                <ui:Button name="weapon-confirm-btn" text="SELECT SCOOP  &#x203A;"  class="car-selection-confirm" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- ── 3. ВЫБОР КОВША ───────────────────────────────────── -->
+        <ui:VisualElement name="scoop-selection-panel" class="fullscreen hidden">
+            <ui:Label text="FRONT SCOOP" class="selection-step-hint" />
+            <ui:Button name="scoop-prev-btn" text="&#x2039;" class="car-edge-arrow car-edge-left" />
+            <ui:Button name="scoop-next-btn" text="&#x203A;" class="car-edge-arrow car-edge-right" />
+            <ui:VisualElement class="car-selection-bottom">
+                <ui:Button name="scoop-back-btn"    text="&#x2039; WEAPON"        class="car-selection-back" />
+                <ui:Label  name="scoop-name-label"  text="None"                    class="car-selection-name" />
+                <ui:Button name="scoop-confirm-btn" text="GO TO LOBBY  &#x203A;"  class="car-selection-confirm" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- ── 4. ЛОББИ ─────────────────────────────────────────── -->
+        <ui:VisualElement name="lobby-panel" class="fullscreen hidden"
+                          style="background-color: rgba(5,5,10,0.92); flex-direction: column;">
+
+            <ui:Label text="LOBBY" class="panel-title" />
+
+            <!-- Режим игры — над списком, виден всем, редактирует только хост -->
+            <ui:VisualElement name="gamemode-row" class="gamemode-row">
+                <ui:Label name="gamemode-label" text="MODE:" class="gamemode-title" />
+                <ui:DropdownField name="gamemode-dropdown" class="dropdown gamemode-dropdown"
+                                  choices="Deathmatch,Last Man Standing" index="0" />
+            </ui:VisualElement>
+
+            <ui:VisualElement class="lobby-layout">
+
+                <!-- Список игроков -->
+                <ui:VisualElement class="player-list-panel">
+                    <ui:Label text="PLAYERS" class="section-label" />
+                    <ui:ScrollView name="player-list" class="player-list" />
+                    <ui:Label name="lobby-status" text="0 / 8  players" class="status-label" />
+                </ui:VisualElement>
+
+                <!-- Чат -->
+                <ui:VisualElement class="chat-panel">
+                    <ui:Label text="CHAT" class="section-label" />
+                    <ui:ScrollView name="chat-messages" class="chat-messages" />
+                    <ui:VisualElement class="chat-input-row">
+                        <ui:TextField name="chat-input" class="chat-input" />
+                        <ui:Button name="chat-send-btn" text="SEND" class="chat-send-btn" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+            </ui:VisualElement>
+
+            <ui:VisualElement class="lobby-footer">
+                <ui:Button name="leave-btn"  text="LEAVE"      class="menu-btn secondary" style="margin-right: auto;" />
+                <ui:Button name="ready-btn"  text="READY"      class="menu-btn ready-btn" />
+                <ui:Button name="start-btn"  text="START GAME" class="menu-btn start-btn hidden" />
+            </ui:VisualElement>
+
         </ui:VisualElement>
 
     </ui:VisualElement>

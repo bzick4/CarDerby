@@ -57,6 +57,8 @@ namespace CarDerby.Networking
         public NetworkList<LobbyPlayerData> Players => _players;
 
         public event Action OnLobbyChanged;
+        // sender display-name, message text
+        public event Action<string, string> OnChatMessage;
 
         public override void OnNetworkSpawn()
         {
@@ -120,6 +122,26 @@ namespace CarDerby.Networking
         [ServerRpc]
         public void SetGameModeServerRpc(string mode) =>
             _selectedGameMode.Value = mode;
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SendChatServerRpc(string message, ServerRpcParams rpc = default)
+        {
+            if (string.IsNullOrWhiteSpace(message)) return;
+            string text = message.Length > 80 ? message.Substring(0, 80) : message;
+
+            string sender = $"Player_{rpc.Receive.SenderClientId}";
+            foreach (var p in _players)
+                if (p.ClientId == rpc.Receive.SenderClientId)
+                { sender = p.DisplayName.ToString(); break; }
+
+            ReceiveChatClientRpc(sender, text);
+        }
+
+        [ClientRpc]
+        private void ReceiveChatClientRpc(string sender, string message)
+        {
+            OnChatMessage?.Invoke(sender, message);
+        }
 
         // ── Server actions ───────────────────────────────────────────────────
 
