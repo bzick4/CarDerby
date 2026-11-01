@@ -704,3 +704,84 @@
     transition-property: width, background-color;
     transition-duration: 0.15s;
 }
+
+/* ── Mobile touch controls ───────────────────────────────────────────────── */
+
+.mobile-controls {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 240px;
+    picking-mode: ignore;
+}
+
+.joystick-zone {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    width: 140px;
+    height: 140px;
+    picking-mode: position;
+}
+
+.joystick-base {
+    width: 140px;
+    height: 140px;
+    border-radius: 70px;
+    background-color: rgba(255, 255, 255, 0.08);
+    border-width: 2px;
+    border-color: rgba(255, 255, 255, 0.25);
+    align-items: center;
+    justify-content: center;
+}
+
+.joystick-knob {
+    width: 52px;
+    height: 52px;
+    border-radius: 26px;
+    background-color: rgba(255, 255, 255, 0.45);
+    border-width: 2px;
+    border-color: rgba(255, 255, 255, 0.7);
+}
+
+.mobile-btn {
+    position: absolute;
+    border-radius: 50px;
+    border-width: 2px;
+    align-items: center;
+    justify-content: center;
+    picking-mode: position;
+}
+
+.mobile-btn-label {
+    color: rgba(255, 255, 255, 0.85);
+    -unity-font-style: bold;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.mobile-fire-btn {
+    width: 96px;
+    height: 96px;
+    right: 20px;
+    bottom: 20px;
+    background-color: rgba(210, 50, 50, 0.35);
+    border-color: rgba(220, 70, 70, 0.75);
+}
+
+.mobile-nitro-btn {
+    width: 68px;
+    height: 68px;
+    right: 38px;
+    bottom: 132px;
+    background-color: rgba(50, 120, 220, 0.35);
+    border-color: rgba(70, 140, 230, 0.75);
+}
+
+.mobile-brake-btn {
+    width: 74px;
+    height: 74px;
+    right: 130px;
+    bottom: 20px;
+    background-color: rgba(210, 170, 20, 0.35);
+    border-color: rgba(230, 190, 40, 0.75);
+}

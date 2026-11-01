@@ -25,5 +25,32 @@
         <!-- Enemy world-space HP bars are injected here at runtime by WorldSpaceHealthBar.cs -->
         <ui:VisualElement name="ws-overlay" class="ws-overlay" picking-mode="Ignore" />
 
+        <!-- ── MOBILE TOUCH CONTROLS (hidden on PC) ─────────────────────── -->
+        <ui:VisualElement name="mobile-controls" class="mobile-controls hidden">
+
+            <!-- Left joystick -->
+            <ui:VisualElement name="joystick-zone" class="joystick-zone">
+                <ui:VisualElement name="joystick-base" class="joystick-base">
+                    <ui:VisualElement name="joystick-knob" class="joystick-knob" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- Brake -->
+            <ui:VisualElement name="brake-btn" class="mobile-btn mobile-brake-btn">
+                <ui:Label text="BRAKE" class="mobile-btn-label" />
+            </ui:VisualElement>
+
+            <!-- Nitro -->
+            <ui:VisualElement name="nitro-btn" class="mobile-btn mobile-nitro-btn">
+                <ui:Label text="NITRO" class="mobile-btn-label" />
+            </ui:VisualElement>
+
+            <!-- Fire -->
+            <ui:VisualElement name="fire-btn" class="mobile-btn mobile-fire-btn">
+                <ui:Label text="FIRE" class="mobile-btn-label" />
+            </ui:VisualElement>
+
+        </ui:VisualElement>
+
     </ui:VisualElement>
 </ui:UXML>

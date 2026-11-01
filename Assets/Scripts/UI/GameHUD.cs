@@ -39,6 +39,8 @@ namespace CarDerby.UI
             _healthFill  = root.Q<VisualElement>("health-bar-fill");
             _healthValue = root.Q<Label>("health-value");
             _wsOverlay   = root.Q<VisualElement>("ws-overlay");
+
+            GetComponent<MobileInputUI>()?.Init(root);
         }
 
         public VisualElement RegisterEnemyBar(out VisualElement fill)
